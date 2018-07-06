@@ -25,7 +25,7 @@ namespace RAFtest
 			universalDataPack udp = new universalDataPack();
 			udp.vendorFields = new vendorFields();
 			udp.productFields = new productFields();
-			udp.partFields = new partFields();
+			udp.partFields = new partField();
 			multitool multitool = new multitool();
 			multitool.data = new List<universalDataPack>();
 			List<string> data = new List<string>();
@@ -37,7 +37,7 @@ namespace RAFtest
 				while (_fs.Read(b, 0, b.Length) > 0)
 				{
 					//reset container
-					udp.vendorFields = new vendorFields(); udp.productFields = new productFields(); udp.partFields = new partFields();
+					udp.vendorFields = new vendorFields(); udp.productFields = new productFields(); udp.partFields = new partField();
 					position = 0;
 					string xRaw = b[0].ToString();
 					string x = t.GetString(b.ToArray().Take(b.Length).ToArray());
@@ -64,13 +64,13 @@ namespace RAFtest
 								//{
 								//	lets_make_a_number.Add(b[ii]);
 								//}
-								int kjhgfds = 0;
+								int a_number = 0;
 								foreach (char s in temp)
 								{
-									kjhgfds = Convert.ToInt32(s);
+									a_number = Convert.ToInt32(s);
 								}
 								//int new_number = BitConverter.ToInt32(lets_make_a_number.ToArray(), 0);
-								udp.partFields = _switch.partSwitch(i + 1, kjhgfds.ToString(), udp.partFields);
+								udp.partFields = _switch.partSwitch(i + 1, a_number.ToString(), udp.partFields);
 							}
 						}
 						position += fileType.fields[i];

@@ -12,7 +12,6 @@ namespace RAFtest
 			public string searchKey { get; set; }
 			public string searchVal { get; set; }
 			public string tableName { get; set; }
-
 		}
 		public class sqlSearchParameters
 		{
@@ -27,13 +26,35 @@ namespace RAFtest
 		}
 		public class universalDataPack
 		{
-			public partFields partFields { get; set; }
+			public partField partFields { get; set; }
 			public productFields productFields { get; set; }
 			public vendorFields vendorFields { get; set; }
 		}
-
-		public class partFields
+		public class stringAlongCollection
 		{
+			public int masterID { get; set; }
+			public List<stringAlongField> stringAlongPack { get; set; }
+		}
+		public class stringAlongField
+		{
+			public int ID { get; set; }
+			public string name { get; set; }
+			public List<partPack> reqd_part { get; set; }
+		}
+		public class partPack
+		{
+			public int part_ID { get; set; }
+			public int qty_reqd { get; set; }
+		}
+		public class productParts
+		{
+			public string productNumber { get; set; }
+			public string partNumber { get; set; }
+			public int quantity_reqd { get; set; }
+		}
+		public class partField
+		{
+			
 			public string part_number { get; set; }
 			public string description { get; set; }
 			public int specification { get; set; }
@@ -46,10 +67,10 @@ namespace RAFtest
 			public decimal price { get; set; }
 			public int quantity_to_order { get; set; }
 			public int listed_PO_num { get; set; }
-			public DateTime delivery_date_1 { get; set; }
-			public DateTime delivery_date_2 { get; set; }
-			public DateTime delivery_date_3 { get; set; }
-			public DateTime delivery_date_4 { get; set; }
+			public int delivery_date_1 { get; set; }
+			public int delivery_date_2 { get; set; }
+			public int delivery_date_3 { get; set; }
+			public int delivery_date_4 { get; set; }
 			public decimal added_cost { get; set; }
 			public int cycle_time_secs_second_machine { get; set; }
 			public decimal added_cost_machine_2 { get; set; }
@@ -74,21 +95,21 @@ namespace RAFtest
 		}
 		public class productFields
 		{
-			public string productNumber { get; set; }
-			public string description { get; set; }
-			public decimal price { get; set; }
-			public decimal weight { get; set; }
-			public decimal master_units { get; set; }	
-			public decimal cubic_feet { get; set; }
+			public string Product_Number { get; set; }
+			public string Description { get; set; }
+			public decimal Price { get; set; }
+			public decimal Weight { get; set; }
+			public decimal Master_Units { get; set; }	
+			public decimal Cubic_Feet { get; set; }
 			public int quantity_on_hand { get; set; }
 			public int annual_use { get; set; }
 			public int sales_last_period { get; set; }
 			public int ytd_sales { get; set; }
 			public int gross { get; set; }
-			public int assembly_time_secs { get; set; }
+			public decimal assembly_time_secs { get; set; }
 			public int product_code { get; set; }
 			public Dictionary<string, int> parts_reqd { get; set; }
-			public string string_along { get; set; }
+			public int string_along { get; set; }
 		}
 		public class vendorFields
 		{
@@ -143,6 +164,13 @@ namespace RAFtest
 				return vendor_tester;
 			}
 		}
+
+		public class rawDataAndType
+		{
+			public Type type { get; set; }
+			public string raw { get; set; }
+		}
+
 		public class fileType
 		{
 			public int len { get; set; }
