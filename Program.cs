@@ -15,13 +15,24 @@ namespace RAFtest
 			RAF_Read r = new RAF_Read();
 			sample_data sample = new sample_data();
 			fileSpecs specs = new fileSpecs();
-
+			foreach(string arg in args)
+			{
+				switch (arg)
+				{
+					case "q":
+						break;
+					case "i":
+						break;
+					case "u":
+						break;
+					case "d":
+						break;
+				}
+			}
 			List<string> raw = r.readFromFile(@"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\PRODDATA.txt");
 			List<productFields> products = parse.productParser(raw);
-			foreach(productFields product in products)
-			{
-				dbm.update_product(product);
-			}
+			dbm.update_products(products);
+
 			//dbm.importProducts(products);
 			//dbm.importProductParts(products);
 

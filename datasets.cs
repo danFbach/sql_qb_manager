@@ -168,7 +168,7 @@ namespace RAFtest
 		public class rawDataAndType
 		{
 			public Type type { get; set; }
-			public string raw { get; set; }
+			public string value { get; set; }
 		}
 
 		public class fileType

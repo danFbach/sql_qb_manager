@@ -72,6 +72,7 @@ namespace RAFtest
 			SqlDataAdapter sda;
 			sda = new SqlDataAdapter("SELECT TOP(1) * FROM " + table, sql_conn);
 			sda.Fill(dataset, table);
+			
 			scb = new SqlCommandBuilder(sda);
 			return scb;
 		}
@@ -85,19 +86,18 @@ namespace RAFtest
 			scb = new SqlCommandBuilder(sda);
 			return scb;
 		}
-		public SqlDataReader selectQuery(string command = "WHERE Id = 0", string table = "Products")
+		public SqlDataReader selectQuery(string command = "WHERE column = val", string table = "table")
 		{
 			SqlCommand sql = new SqlCommand();
 			sql.Connection = sql_conn;
 			sql.CommandType = CommandType.Text;
 			sql.CommandText = "SELECT * FROM " + table + " " + command;
 			return sql.ExecuteReader();
-
 		}
 		public rawDataAndType dataReader(int i, SqlDataReader sdr, rawDataAndType rawData)
 		{
 			rawData = new rawDataAndType();
-			rawData.raw = sdr[i].ToString();
+			rawData.value = sdr[i].ToString();
 			rawData.type = sdr[i].GetType();
 			return rawData;
 		}
@@ -241,21 +241,42 @@ namespace RAFtest
 		{
 
 		}
-		public void update_product(productFields product)
+		public int update_products(List<productFields> products)
 		{
+			DataSet ds = new DataSet();
+
+			int updated = 0;
 			openDBcnxtn();
-			SqlDataReader sdr = selectQuery("WHERE id = 0", dbconfig.productTable);
-			sdr.Read();
-			for(int i = 0; i < dbconfig.productColCount; i++)
+			foreach (productFields product in products)
 			{
-				dataReader
+				List<rawDataAndType> currentData = pullFromSql(product.Product_Number);
+				SqlCommand update = createCommandBuilder("SELECT * FROM " + dbconfig.productTable + " WHERE Product_Number = " + product.Product_Number, dbconfig.productTable).GetUpdateCommand(true);
+				update = _switch.prodSwitch(currentData, product, update);
+				if (!update.Parameters[0].Value.Equals(null))
+				{
+					if (int.Parse(update.Parameters[0].Value.ToString()) >= 0)
+					{
+						update.ExecuteReader(CommandBehavior.SingleRow).Read();
+						updated += update.ExecuteNonQuery();
+					}
+				}
 			}
-			List<rawDataAndType> rawData = dataReader(dbconfig.productColCount, sdr);
-			SqlCommandBuilder scb = createCommandBuilder("SELECT TOP(1) * FROM " + dbconfig.productTable, dbconfig.productTable);
-
-			SqlCommand update = scb.GetUpdateCommand();
-
 			sql_conn.Close();
+			return updated;
+		}
+		public List<rawDataAndType> pullFromSql(string product_number)
+		{
+			rawDataAndType rawData;
+			List<rawDataAndType> datapack = new List<rawDataAndType>();
+			SqlDataReader sdr = selectQuery("WHERE Product_Number = " + product_number, dbconfig.productTable);
+			sdr.Read();
+			for (int i = 0; i < sdr.FieldCount; i++)
+			{
+				rawData = new rawDataAndType();
+				datapack.Add(dataReader(i, sdr, rawData));
+			}
+			sdr.Close();
+			return datapack;
 		}
 		public vendorFields delete_product(vendorFields vendor, sqlSearchParameters ssp)
 		{

@@ -2,13 +2,14 @@
 using System.Data.SqlClient;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using static RAFtest.datasets;
 
 namespace RAFtest
 {
 	class dataSwitches
 	{
-		public string vendorSqlSwitch(string sqlCol, datasets.vendorFields v)
+		dbConfig dbconfig = new dbConfig();
+		public string vendorSqlSwitch(string sqlCol, vendorFields v)
 		{
 			switch (sqlCol)
 			{
@@ -58,7 +59,7 @@ namespace RAFtest
 					return "";
 			}
 		}
-		public datasets.vendorFields vendorSwitch(int i, string rawData, datasets.vendorFields v)
+		public vendorFields vendorSwitch(int i, string rawData, vendorFields v)
 		{
 			if (rawData.Trim() == "") { return v; }
 			switch (i)
@@ -127,7 +128,7 @@ namespace RAFtest
 					return v;
 			}
 		}
-		public SqlCommand productSqlSwitch(SqlCommand command, datasets.productFields product, int id)
+		public SqlCommand productSqlSwitch(SqlCommand command, productFields product, int id)
 		{
 			foreach (SqlParameter param in command.Parameters)
 			{
@@ -179,67 +180,174 @@ namespace RAFtest
 			}
 			return command;
 		}
-		public SqlCommand prodCheckSwitch(int i, List<datasets.rawDataAndType> rawData, SqlCommand update)
+		public List<SqlCommand> productCheckSwitch(List<List<rawDataAndType>> rawData, SqlCommand update)
 		{
+			List<SqlCommand> commandPack = new List<SqlCommand>();
+			SqlCommand updateTemp;
+			foreach (List<rawDataAndType> data in rawData)
+			{
+				updateTemp = update.Clone();
+				for (int i = 0; i < dbconfig.productColCount; i++)
+				{
+					switch (i)
+					{
+						case 0:
+							update.Parameters["Product_Number"].Value = data[i].value;
+							break;
+						case 1:
+							update.Parameters["Description"].Value = data[i].value;
+							break;
+						case 2:
+							bool rx0 = decimal.TryParse(data[i].value, out decimal dx0);
+							if (rx0) { update.Parameters["Price"].Value = dx0; }
+							break;
+						case 3:
+							bool rx1 = decimal.TryParse(data[i].value, out decimal dx1);
+							if (rx1) { update.Parameters["Weight"].Value = dx1; }
+							break;
+						case 4:
+							bool r0 = decimal.TryParse(data[i].value, out decimal i0);
+							if (r0) { update.Parameters["Master_Units"].Value = i0; }
+							break;
+						case 5:
+							bool r1 = decimal.TryParse(data[i].value, out decimal i1);
+							if (r1) { update.Parameters["Cubic_Feet"].Value = i1; }
+							break;
+						case 6:
+							bool r2 = int.TryParse(data[i].value, out int i2);
+							if (r2) { update.Parameters["quantity_on_hand"].Value = i2; }
+							break;
+						case 7:
+							bool r3 = int.TryParse(data[i].value, out int i3);
+							if (r3) { update.Parameters["annual_use"].Value = i3; }
+							break;
+						case 8:
+							bool r4 = int.TryParse(data[i].value, out int i4);
+							if (r4) { update.Parameters["sales_last_period"].Value = i4; }
+							break;
+						case 9:
+							bool r5 = int.TryParse(data[i].value, out int i5);
+							if (r5) { update.Parameters["ytd_sales"].Value = i5; }
+							break;
+						case 10:
+							bool r6 = int.TryParse(data[i].value, out int i6);
+							if (r6) { update.Parameters["gross"].Value = i6; }
+							break;
+						case 11:
+							bool r7 = decimal.TryParse(data[i].value, out decimal i7);
+							if (r7) { update.Parameters["assembly_time_secs"].Value = i7; }
+							break;
+						case 12:
+							bool r8 = int.TryParse(data[i].value, out int i8);
+							if (r8) { update.Parameters["product_code"].Value = i8; }
+							break;
+						case 13:
+							bool r9 = int.TryParse(data[i].value, out int i9);
+							if (r9) { update.Parameters["string_along"].Value = i9; }
+							break;
+					}
+				}
+				commandPack.Add(updateTemp);
+			}
+			return commandPack;
+		}
+		public SqlCommand prodSwitch(List<rawDataAndType> dataFromSql, productFields newData, SqlCommand update)
+		{
+			
+			for (int i = 1; i < dataFromSql.Count(); i++)
+			{
 				switch (i)
 				{
-					case 0:
-						update.Parameters["Product_Number"].Value = rawData[i].raw;
-						break;
 					case 1:
-					update.Parameters["Description"].Value = rawData[i].raw;
-						break;
+						if (dataFromSql[i].value.Equals(newData.Product_Number)) { update.Parameters[i].Value = newData.Product_Number; update.Parameters[0].Value = dataFromSql[0].value; }
+						else { return null; }
+						continue;
 					case 2:
-						bool rx0 = decimal.TryParse(rawData[i].raw, out decimal dx0);
-						if (rx0) { update.Parameters["Price"].Value = dx0; }
-						break;
+						if (!dataFromSql[i].value.Equals(newData.Description)) { update.Parameters[i].Value = newData.Description; }
+						else { update.Parameters[i].Value = dataFromSql[i].value; }
+						continue;
 					case 3:
-						bool rx1 = decimal.TryParse(rawData[i].raw, out decimal dx1);
-						if (rx1) { update.Parameters["Weight"].Value = dx1; }
-						break;
+						if (!dataFromSql[i].value.Equals(newData.Price)) { update.Parameters[i].Value = newData.Price; }
+						else { update.Parameters[i].Value = dataFromSql[i].value; }
+						continue;
+					//bool rx0 = decimal.TryParse(dataFromSql[i].value, out decimal dx0);
+					//if (rx0) { newData.Price = dx0; }
+					//break;
 					case 4:
-						bool r0 = decimal.TryParse(rawData[i].raw, out decimal i0);
-						if (r0) { update.Parameters["Master_Units"].Value = i0; }
-						break;
+						if (!dataFromSql[i].value.Equals(newData.Weight)) { update.Parameters[i].Value = newData.Weight; }
+						else { update.Parameters[i].Value = dataFromSql[i].value; }
+						continue;
+					//bool rx1 = decimal.TryParse(dataFromSql[i].value, out decimal dx1);
+					//if (rx1) { newData.Weight = dx1; }
+					//break;
 					case 5:
-						bool r1 = decimal.TryParse(rawData[i].raw, out decimal i1);
-						if (r1) { update.Parameters["Cubic_Feet"].Value = i1; }
-						break;
+						if (!dataFromSql[i].value.Equals(newData.Master_Units)) { update.Parameters[i].Value = newData.Master_Units; }
+						else { update.Parameters[i].Value = dataFromSql[i].value; }
+						continue;
+						//bool r0 = decimal.TryParse(dataFromSql[i].value, out decimal i0);
+						//if (r0) { newData.Master_Units = i0; }
+						//break;
 					case 6:
-						bool r2 = int.TryParse(rawData[i].raw, out int i2);
-						if (r2) { update.Parameters["quantity_on_hand"].Value = i2; }
-						break;
+						if (!dataFromSql[i].value.Equals(newData.Cubic_Feet)) { update.Parameters[i].Value = newData.Cubic_Feet; }
+						else { update.Parameters[i].Value = dataFromSql[i].value; }
+						continue;
+						//bool r1 = decimal.TryParse(dataFromSql[i].value, out decimal i1);
+						//if (r1) { newData.Cubic_Feet = i1; }
+						//break;
 					case 7:
-						bool r3 = int.TryParse(rawData[i].raw, out int i3);
-						if (r3) { update.Parameters["annual_use"].Value = i3; }
-						break;
+						if (!dataFromSql[i].value.Equals(newData.quantity_on_hand)) { update.Parameters[i].Value = newData.quantity_on_hand; }
+						else { update.Parameters[i].Value = dataFromSql[i].value; }
+						continue;
+						//bool r2 = int.TryParse(dataFromSql[i].value, out int i2);
+						//if (r2) { newData.quantity_on_hand = i2; }
+						//break;
 					case 8:
-						bool r4 = int.TryParse(rawData[i].raw, out int i4);
-						if (r4) { update.Parameters["sales_last_period"].Value = i4; }
-						break;
+						if (!dataFromSql[i].value.Equals(newData.annual_use)) { update.Parameters[i].Value = newData.annual_use; }
+						else { update.Parameters[i].Value = dataFromSql[i].value; }
+						continue;
+						//bool r3 = int.TryParse(dataFromSql[i].value, out int i3);
+						//if (r3) { newData.annual_use = i3; }
+						//break;
 					case 9:
-						bool r5 = int.TryParse(rawData[i].raw, out int i5);
-						if (r5) { update.Parameters["ytd_sales"].Value = i5; }
-						break;
+						if (!dataFromSql[i].value.Equals(newData.sales_last_period)) { update.Parameters[i].Value = newData.sales_last_period; }
+						else { update.Parameters[i].Value = dataFromSql[i].value; }
+						continue;
+					//bool r4 = int.TryParse(dataFromSql[i].value, out int i4);
+					//if (r4) { newData.sales_last_period = i4; }
+					//break;
 					case 10:
-						bool r6 = int.TryParse(rawData[i].raw, out int i6);
-						if (r6) { update.Parameters["gross"].Value = i6; }
-						break;
+						if (!dataFromSql[i].value.Equals(newData.ytd_sales)) { update.Parameters[i].Value = newData.ytd_sales; }
+						else { update.Parameters[i].Value = dataFromSql[i].value; }
+						continue;
+						//bool r5 = int.TryParse(dataFromSql[i].value, out int i5);
+						//if (r5) { newData.ytd_sales = i5; }
+						//break;
 					case 11:
-						bool r7 = decimal.TryParse(rawData[i].raw, out decimal i7);
-						if (r7) { update.Parameters["assembly_time_secs"].Value = i7; }
-						break;
+						if (!dataFromSql[i].value.Equals(newData.gross)) { update.Parameters[i].Value = newData.gross; }
+						else { update.Parameters[i].Value = dataFromSql[i].value; }
+						continue;
+					//bool r6 = int.TryParse(dataFromSql[i].value, out int i6);
+					//if (r6) { newData.gross = i6; }
+					//break;
 					case 12:
-						bool r8 = int.TryParse(rawData[i].raw, out int i8);
-						if (r8) { update.Parameters["product_code"].Value = i8; }
-						break;
+						if (!dataFromSql[i].value.Equals(newData.assembly_time_secs)) { update.Parameters[i].Value = newData.assembly_time_secs; }
+						else { update.Parameters[i].Value = dataFromSql[i].value; }
+						continue;
+						//bool r7 = decimal.TryParse(dataFromSql[i].value, out decimal i7);
+						//if (r7) { newData.assembly_time_secs = i7; }
+						//break;
 					case 13:
-						bool r9 = int.TryParse(rawData[i].raw, out int i9);
-						if (r9) { update.Parameters["string_along"].Value = i9; }
-						break;
+						if (!dataFromSql[i].value.Equals(newData.product_code)) { update.Parameters[i].Value = newData.product_code; }
+						else { update.Parameters[i].Value = dataFromSql[i].value; }
+						continue;
+						//bool r8 = int.TryParse(dataFromSql[i].value, out int i8);
+						//if (r8) { newData.product_code = i8; }
+						//break;
 				}
+			}
+			return update;
 		}
-		public datasets.productFields prodSwitch(int i, string rawData, datasets.productFields p)
+		public productFields prodSwitch(int i, string rawData, productFields p)
 		{
 			if (rawData.Trim() == "") { return p; }
 			switch (i)
@@ -332,7 +440,7 @@ namespace RAFtest
 			}
 			return p;
 		}
-		public SqlCommand partSqlParamSwitch(SqlCommand command, datasets.partField part, int id)
+		public SqlCommand partSqlParamSwitch(SqlCommand command, partField part, int id)
 		{
 			DateTime _base = DateTime.Parse("1/1/1988");
 			foreach (SqlParameter param in command.Parameters)
@@ -504,7 +612,7 @@ namespace RAFtest
 			}
 			return command;
 		}
-		public datasets.partField partSwitch(int i, string rawData, datasets.partField p)
+		public partField partSwitch(int i, string rawData, partField p)
 		{
 			if (rawData.Trim() == "") { return p; }
 			switch (i)
