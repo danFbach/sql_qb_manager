@@ -91,7 +91,6 @@
     <Content Include="data\PARTDATA.TXT" />
     <Content Include="data\PRODDATA.TXT" />
     <Content Include="data\STRLDATA.TXT" />
-    <Content Include="data\_blank.txt" />
     <Content Include="sqlModels\dbo.Table.sql" />
     <Content Include="sqlModels\dbo.Table_1.sql" />
     <Content Include="sqlModels\dbo.Table_2.sql" />

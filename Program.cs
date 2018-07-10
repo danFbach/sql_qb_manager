@@ -1,8 +1,5 @@
-﻿using System;
+﻿using static RAFtest.datasets;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using static RAFtest.datasets;
 
 namespace RAFtest
 {
@@ -10,25 +7,71 @@ namespace RAFtest
 	{
 		static void Main(string[] args)
 		{
-			db_manager dbm = new db_manager();
-			Parse parse = new Parse();
-			RAF_Read r = new RAF_Read();
-			sample_data sample = new sample_data();
-			fileSpecs specs = new fileSpecs();
-			foreach(string arg in args)
+			db_manager dbm = new db_manager( );
+			Parse parse = new Parse( );
+			RAF_Read r = new RAF_Read( );
+			sample_data sample = new sample_data( );
+			fileSpecs specs = new fileSpecs( );
+			switch(args[0])
 			{
-				switch (arg)
-				{
-					case "q":
-						break;
-					case "i":
-						break;
-					case "u":
-						break;
-					case "d":
-						break;
-				}
+				case "q":
+					if(args[0] == "-pr")
+					{
+						dbm.query_product( );
+					}
+					else if(args[0] == "-pt")
+					{
+						dbm.query_part( );
+					}
+					else if(args[0] == "-v")
+					{
+						dbm.query_vendor( );
+					}
+					break;
+				case "i":
+					if(args[0] == "-pr")
+					{
+						dbm.insert_product( );
+					}
+					else if(args[0] == "-pt")
+					{
+						dbm.insert_part( );
+					}
+					else if(args[0] == "-v")
+					{
+						dbm.insert_vendor();
+					}
+					break;
+				case "u":
+					if(args[0] == "-pr")
+					{
+						dbm.update_products( );
+					}
+					else if(args[0] == "-pt")
+					{
+						dbm.update_part( );
+					}
+					else if(args[0] == "-v")
+					{
+						dbm.update_vendor( );
+					}
+					break;
+				case "d":
+					if(args[0] == "-pr")
+					{
+						dbm.delete_product( );
+					}
+					else if(args[0] == "-pt")
+					{
+						dbm.delete_part( );
+					}
+					else if(args[0] == "-v")
+					{
+						dbm.delete_vendor( );
+					}
+					break;
 			}
+
 			List<string> raw = r.readFromFile(@"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\PRODDATA.txt");
 			List<productFields> products = parse.productParser(raw);
 			dbm.update_products(products);

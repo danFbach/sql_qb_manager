@@ -37,6 +37,7 @@ namespace RAFtest
 						for (int i = 1; i < newSA.Count(); i++)
 						{
 							part = new partPack();
+							if (newSA[i].Contains("ƒ")) { continue; }
 							string[] a_part = newSA[i].Trim().Split(' ');
 							part.part_ID = int.Parse(a_part.First());
 							part.qty_reqd = int.Parse(a_part.Last());

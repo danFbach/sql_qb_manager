@@ -13,24 +13,24 @@ namespace RAFtest
 	class db_manager
 	{
 		#region global vars
-		SqlConnection sql_conn = new SqlConnection();
-		dbConfig dbconfig = new dbConfig();
-		dataSwitches _switch = new dataSwitches();
+		SqlConnection sql_conn = new SqlConnection( );
+		dbConfig dbconfig = new dbConfig( );
+		dataSwitches _switch = new dataSwitches( );
 		#endregion global vars
 		public void load_Into_SQL(List<vendorFields> vendors, sqlSearchParameters ssp)
 		{
 			int added = 0;
-			List<SqlCommand> sqlCommands = new List<SqlCommand>();
-			openDBcnxtn();
+			List<SqlCommand> sqlCommands = new List<SqlCommand>( );
+			openDBcnxtn( );
 			SqlCommandBuilder scb = createCommandBuilder(dbconfig.vendorTable);
-			SqlCommand insert = scb.GetInsertCommand();
-			SqlCommand holder = new SqlCommand();
-			foreach (vendorFields _v in vendors)
+			SqlCommand insert = scb.GetInsertCommand( );
+			SqlCommand holder = new SqlCommand( );
+			foreach(vendorFields _v in vendors)
 			{
-				holder = insert.Clone();
-				foreach (SqlParameter param in holder.Parameters)
+				holder = insert.Clone( );
+				foreach(SqlParameter param in holder.Parameters)
 				{
-					if (param.SourceColumn == "id")
+					if(param.SourceColumn == "id")
 					{
 						param.Value = _v.id;
 					}
@@ -45,41 +45,41 @@ namespace RAFtest
 				sqlCommands.Add(holder);
 			}
 
-			foreach (SqlCommand s in sqlCommands)
+			foreach(SqlCommand s in sqlCommands)
 			{
-				DataSet ds = new DataSet();
-				SqlDataAdapter sda1 = new SqlDataAdapter(ssp.sqlCMD + " * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + s.Parameters[0].Value.ToString(), sql_conn);
+				DataSet ds = new DataSet( );
+				SqlDataAdapter sda1 = new SqlDataAdapter(ssp.sqlCMD + " * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + s.Parameters[0].Value.ToString( ), sql_conn);
 				sda1.Fill(ds, "vendor");
-				if (ds.Tables["vendor"].Rows.Count == 0)
+				if(ds.Tables["vendor"].Rows.Count == 0)
 				{
-					added += s.ExecuteNonQuery();
+					added += s.ExecuteNonQuery( );
 				}
 			}
-			sql_conn.Close();
+			sql_conn.Close( );
 			Console.WriteLine(added + " vendors added to database.");
-			Console.ReadKey();
+			Console.ReadKey( );
 		}
 		#region db_utils
 		public void openDBcnxtn()
 		{
 			sql_conn.ConnectionString = dbconfig.inven_general_conn;
-			sql_conn.Open();
+			sql_conn.Open( );
 		}
 		public SqlCommandBuilder createCommandBuilder(string table)
 		{
-			DataSet dataset = new DataSet();
-			SqlCommandBuilder scb = new SqlCommandBuilder();
+			DataSet dataset = new DataSet( );
+			SqlCommandBuilder scb = new SqlCommandBuilder( );
 			SqlDataAdapter sda;
 			sda = new SqlDataAdapter("SELECT TOP(1) * FROM " + table, sql_conn);
 			sda.Fill(dataset, table);
-			
+
 			scb = new SqlCommandBuilder(sda);
 			return scb;
 		}
 		public SqlCommandBuilder createCommandBuilder(string sqlQuery, string table)
 		{
-			DataSet dataset = new DataSet();
-			SqlCommandBuilder scb = new SqlCommandBuilder();
+			DataSet dataset = new DataSet( );
+			SqlCommandBuilder scb = new SqlCommandBuilder( );
 			SqlDataAdapter sda;
 			sda = new SqlDataAdapter(sqlQuery, sql_conn);
 			sda.Fill(dataset, table);
@@ -88,17 +88,17 @@ namespace RAFtest
 		}
 		public SqlDataReader selectQuery(string command = "WHERE column = val", string table = "table")
 		{
-			SqlCommand sql = new SqlCommand();
+			SqlCommand sql = new SqlCommand( );
 			sql.Connection = sql_conn;
 			sql.CommandType = CommandType.Text;
 			sql.CommandText = "SELECT * FROM " + table + " " + command;
-			return sql.ExecuteReader();
+			return sql.ExecuteReader( );
 		}
 		public rawDataAndType dataReader(int i, SqlDataReader sdr, rawDataAndType rawData)
 		{
-			rawData = new rawDataAndType();
-			rawData.value = sdr[i].ToString();
-			rawData.type = sdr[i].GetType();
+			rawData = new rawDataAndType( );
+			rawData.value = sdr[i].ToString( );
+			rawData.type = sdr[i].GetType( );
 			return rawData;
 		}
 		#endregion db_utils
@@ -107,40 +107,39 @@ namespace RAFtest
 		{
 
 		}
-
 		public void update_string_along(sqlSearchParameters ssp, vendorFields vendor)
 		{
-			List<SqlCommand> sqlCommands = new List<SqlCommand>();
-			SqlCommandBuilder scb = new SqlCommandBuilder();
+			List<SqlCommand> sqlCommands = new List<SqlCommand>( );
+			SqlCommandBuilder scb = new SqlCommandBuilder( );
 			SqlDataAdapter sda;
-			DataSet vendorDataSet = new DataSet();
+			DataSet vendorDataSet = new DataSet( );
 			sql_conn.ConnectionString = dbconfig.inven_general_conn;
-			sql_conn.Open();
+			sql_conn.Open( );
 			sda = new SqlDataAdapter("SELECT TOP(1) * FROM " + ssp.tableName, sql_conn);
 			sda.Fill(vendorDataSet, "vendor");
 			scb = new SqlCommandBuilder(sda);
 			SqlCommand update = scb.GetUpdateCommand(true);
-			ssp.searchVal = vendor.id.ToString();
-			sample_data sampledata = new sample_data();
+			ssp.searchVal = vendor.id.ToString( );
+			sample_data sampledata = new sample_data( );
 
 			//select the vendor being used
 			sql_conn.ConnectionString = dbconfig.inven_general_conn;
-			DataSet ds = new DataSet();
-			sql_conn.Open();
+			DataSet ds = new DataSet( );
+			sql_conn.Open( );
 			SqlDataAdapter sda1 = new SqlDataAdapter(ssp.sqlCMD + " * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal, sql_conn);
 			sda1.Fill(ds, "vendor");
 			scb = new SqlCommandBuilder(sda1);
 			//((System.Data.DataTable)(new System.Collections.ArrayList.ArrayListDebugView(ds.Tables.List).Items[0])).Columns.List
-			if (ds.Tables["vendor"].Rows.Count == 1)
+			if(ds.Tables["vendor"].Rows.Count == 1)
 			{
 				object[] drd = ds.Tables["vendor"].Rows[0].ItemArray;
-				for (int i = 1; i <= drd.Count() - 1; i++)
+				for(int i = 1; i <= drd.Count( ) - 1; i++)
 				{
-					vendor = _switch.vendorSwitch(i, drd[i].ToString(), vendor);
+					vendor = _switch.vendorSwitch(i, drd[i].ToString( ), vendor);
 				}
-				foreach (SqlParameter param in update.Parameters)
+				foreach(SqlParameter param in update.Parameters)
 				{
-					if (param.SourceColumn.ToString() == "id")
+					if(param.SourceColumn.ToString( ) == "id")
 					{
 						continue;
 					}
@@ -149,32 +148,30 @@ namespace RAFtest
 						param.Value = _switch.vendorSqlSwitch(param.SourceColumn, vendor);
 					}
 				}
-				update.ExecuteNonQuery();
+				update.ExecuteNonQuery( );
 			}
-			sql_conn.Close();
+			sql_conn.Close( );
 		}
-
 		public vendorFields delete_string_along(vendorFields vendor, sqlSearchParameters ssp)
 		{
-			ssp.searchVal = vendor.id.ToString();
-			SqlCommandBuilder scb = new SqlCommandBuilder();
-			sample_data sampledata = new sample_data();
+			ssp.searchVal = vendor.id.ToString( );
+			SqlCommandBuilder scb = new SqlCommandBuilder( );
+			sample_data sampledata = new sample_data( );
 
 			//select the vendor being used
 			sql_conn.ConnectionString = dbconfig.inven_general_conn;
-			DataSet ds = new DataSet();
-			sql_conn.Open();
+			DataSet ds = new DataSet( );
+			sql_conn.Open( );
 			SqlDataAdapter sda1 = new SqlDataAdapter(ssp.sqlCMD + " * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal, sql_conn);
 			sda1.Fill(ds, "vendor");
 			scb = new SqlCommandBuilder(sda1);
 			object[] drd = ds.Tables["vendor"].Rows[0].ItemArray;
-			for (int i = 1; i <= drd.Count() - 1; i++)
+			for(int i = 1; i <= drd.Count( ) - 1; i++)
 			{
-				vendor = _switch.vendorSwitch(i, drd[i].ToString(), vendor);
+				vendor = _switch.vendorSwitch(i, drd[i].ToString( ), vendor);
 			}
 			return vendor;
 		}
-
 		public void query_string_along(vendorFields vendor)
 		{
 
@@ -183,39 +180,39 @@ namespace RAFtest
 		#region product
 		public void importProducts(List<productFields> products)
 		{
-			openDBcnxtn();
+			openDBcnxtn( );
 			SqlCommandBuilder scb = createCommandBuilder(dbconfig.productTable);
 			SqlCommand insert = scb.GetInsertCommand(true);
-			List<SqlCommand> insertCommands = new List<SqlCommand>();
+			List<SqlCommand> insertCommands = new List<SqlCommand>( );
 			int updated = 0;
-			foreach (productFields product in products)
+			foreach(productFields product in products)
 			{
-				SqlCommand insertTemp = insert.Clone();
+				SqlCommand insertTemp = insert.Clone( );
 				insertTemp.CommandType = CommandType.Text;
 				insertTemp.Connection = sql_conn;
 				_switch.productSqlSwitch(insertTemp, product, updated);
-				updated += insertTemp.ExecuteNonQuery();
+				updated += insertTemp.ExecuteNonQuery( );
 			}
 			Console.WriteLine(updated + " Products added to Database.");
-			Console.ReadKey();
+			Console.ReadKey( );
 		}
 		public void importProductParts(List<productFields> products)
 		{
-			openDBcnxtn();
+			openDBcnxtn( );
 			SqlCommandBuilder scb = createCommandBuilder(dbconfig.prodReqdPartTable);
 			SqlCommand insert = scb.GetInsertCommand(true);
-			List<SqlCommand> insertCommands = new List<SqlCommand>();
+			List<SqlCommand> insertCommands = new List<SqlCommand>( );
 			int updated = 0;
-			foreach (productFields product in products)
+			foreach(productFields product in products)
 			{
-				foreach (KeyValuePair<string, int> part in product.parts_reqd)
+				foreach(KeyValuePair<string, int> part in product.parts_reqd)
 				{
-					SqlCommand insertTemp = insert.Clone();
+					SqlCommand insertTemp = insert.Clone( );
 					insertTemp.CommandType = CommandType.Text;
 					insertTemp.Connection = sql_conn;
-					foreach (SqlParameter param in insertTemp.Parameters)
+					foreach(SqlParameter param in insertTemp.Parameters)
 					{
-						switch (param.SourceColumn)
+						switch(param.SourceColumn)
 						{
 							case "Id":
 								param.Value = updated;
@@ -231,70 +228,70 @@ namespace RAFtest
 								continue;
 						}
 					}
-					updated += insertTemp.ExecuteNonQuery();
+					updated += insertTemp.ExecuteNonQuery( );
 				}
 			}
 			Console.WriteLine(updated + " Products added to Database.");
-			Console.ReadKey();
+			Console.ReadKey( );
 		}
-		public void create_product(vendorFields vendor)
+		public void insert_product()
 		{
 
 		}
 		public int update_products(List<productFields> products)
 		{
-			DataSet ds = new DataSet();
+			DataSet ds = new DataSet( );
 
 			int updated = 0;
-			openDBcnxtn();
-			foreach (productFields product in products)
+			openDBcnxtn( );
+			foreach(productFields product in products)
 			{
 				List<rawDataAndType> currentData = pullFromSql(product.Product_Number);
 				SqlCommand update = createCommandBuilder("SELECT * FROM " + dbconfig.productTable + " WHERE Product_Number = " + product.Product_Number, dbconfig.productTable).GetUpdateCommand(true);
 				update = _switch.prodSwitch(currentData, product, update);
-				if (!update.Parameters[0].Value.Equals(null))
+				if(!update.Parameters[0].Value.Equals(null))
 				{
-					if (int.Parse(update.Parameters[0].Value.ToString()) >= 0)
+					if(int.Parse(update.Parameters[0].Value.ToString( )) >= 0)
 					{
-						update.ExecuteReader(CommandBehavior.SingleRow).Read();
-						updated += update.ExecuteNonQuery();
+						update.ExecuteReader(CommandBehavior.SingleRow).Read( );
+						updated += update.ExecuteNonQuery( );
 					}
 				}
 			}
-			sql_conn.Close();
+			sql_conn.Close( );
 			return updated;
 		}
 		public List<rawDataAndType> pullFromSql(string product_number)
 		{
 			rawDataAndType rawData;
-			List<rawDataAndType> datapack = new List<rawDataAndType>();
+			List<rawDataAndType> datapack = new List<rawDataAndType>( );
 			SqlDataReader sdr = selectQuery("WHERE Product_Number = " + product_number, dbconfig.productTable);
-			sdr.Read();
-			for (int i = 0; i < sdr.FieldCount; i++)
+			sdr.Read( );
+			for(int i = 0; i < sdr.FieldCount; i++)
 			{
-				rawData = new rawDataAndType();
+				rawData = new rawDataAndType( );
 				datapack.Add(dataReader(i, sdr, rawData));
 			}
-			sdr.Close();
+			sdr.Close( );
 			return datapack;
 		}
 		public vendorFields delete_product(vendorFields vendor, sqlSearchParameters ssp)
 		{
-			ssp.searchVal = vendor.id.ToString();
-			SqlCommandBuilder scb = new SqlCommandBuilder();
-			sample_data sampledata = new sample_data();
+			ssp.searchVal = vendor.id.ToString( );
+			SqlCommandBuilder scb = new SqlCommandBuilder( );
+			sample_data sampledata = new sample_data( );
 
 			//select the vendor being used
 			sql_conn.ConnectionString = dbconfig.inven_general_conn;
-			DataSet ds = new DataSet();
-			sql_conn.Open();
+			DataSet ds = new DataSet( );
+			sql_conn.Open( );
 			SqlDataAdapter sda1 = new SqlDataAdapter(ssp.sqlCMD + " * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal, sql_conn);
 			sda1.Fill(ds, "vendor");
 			scb = new SqlCommandBuilder(sda1);
 			object[] drd = ds.Tables["vendor"].Rows[0].ItemArray;
-			for (int i = 1; i <= drd.Count() - 1; i++)
+			for(int i = 1; i <= drd.Count( ) - 1; i++)
 			{
-				vendor = _switch.vendorSwitch(i, drd[i].ToString(), vendor);
+				vendor = _switch.vendorSwitch(i, drd[i].ToString( ), vendor);
 			}
 			return vendor;
 		}
@@ -307,18 +304,18 @@ namespace RAFtest
 
 		public void importParts(List<partField> parts)
 		{
-			openDBcnxtn();
+			openDBcnxtn( );
 			SqlCommandBuilder scb = createCommandBuilder(dbconfig.partTable);
 			SqlCommand insert = scb.GetInsertCommand(true);
-			List<SqlCommand> insertCommands = new List<SqlCommand>();
+			List<SqlCommand> insertCommands = new List<SqlCommand>( );
 			int updated = 0;
-			foreach (partField part in parts)
+			foreach(partField part in parts)
 			{
-				SqlCommand insertTemp = insert.Clone();
+				SqlCommand insertTemp = insert.Clone( );
 				insertTemp.CommandType = CommandType.Text;
 				insertTemp.Connection = sql_conn;
 				_switch.partSqlParamSwitch(insertTemp, part, updated);
-				updated += insertTemp.ExecuteNonQuery();
+				updated += insertTemp.ExecuteNonQuery( );
 				//insertCommands.Add(insertTemp);
 			}
 			//foreach(SqlCommand sqlCmd in insertCommands)
@@ -326,124 +323,120 @@ namespace RAFtest
 			//	updated += sqlCmd.ExecuteNonQuery();
 			//}
 			Console.WriteLine(updated + " Parts added to Database.");
-			Console.ReadKey();
+			Console.ReadKey( );
 		}
-		public void create_part(vendorFields vendor)
+		public void insert_part()
 		{
 
 		}
-
-		public void update_part(sqlSearchParameters ssp, vendorFields vendor)
+		public void update_part()
 		{
-			List<SqlCommand> sqlCommands = new List<SqlCommand>();
-			SqlCommandBuilder scb = new SqlCommandBuilder();
-			SqlDataAdapter sda;
-			DataSet vendorDataSet = new DataSet();
-			sql_conn.ConnectionString = dbconfig.inven_general_conn;
-			sql_conn.Open();
-			sda = new SqlDataAdapter("SELECT TOP(1) * FROM " + ssp.tableName, sql_conn);
-			sda.Fill(vendorDataSet, "vendor");
-			scb = new SqlCommandBuilder(sda);
-			SqlCommand update = scb.GetUpdateCommand(true);
-			ssp.searchVal = vendor.id.ToString();
-			sample_data sampledata = new sample_data();
+			//List<SqlCommand> sqlCommands = new List<SqlCommand>( );
+			//SqlCommandBuilder scb = new SqlCommandBuilder( );
+			//SqlDataAdapter sda;
+			//DataSet vendorDataSet = new DataSet( );
+			//sql_conn.ConnectionString = dbconfig.inven_general_conn;
+			//sql_conn.Open( );
+			//sda = new SqlDataAdapter("SELECT TOP(1) * FROM " + ssp.tableName, sql_conn);
+			//sda.Fill(vendorDataSet, "vendor");
+			//scb = new SqlCommandBuilder(sda);
+			//SqlCommand update = scb.GetUpdateCommand(true);
+			//ssp.searchVal = vendor.id.ToString( );
+			//sample_data sampledata = new sample_data( );
 
-			//select the vendor being used
-			sql_conn.ConnectionString = dbconfig.inven_general_conn;
-			DataSet ds = new DataSet();
-			sql_conn.Open();
-			SqlDataAdapter sda1 = new SqlDataAdapter(ssp.sqlCMD + " * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal, sql_conn);
-			sda1.Fill(ds, "vendor");
-			scb = new SqlCommandBuilder(sda1);
-			//((System.Data.DataTable)(new System.Collections.ArrayList.ArrayListDebugView(ds.Tables.List).Items[0])).Columns.List
-			if (ds.Tables["vendor"].Rows.Count == 1)
-			{
-				object[] drd = ds.Tables["vendor"].Rows[0].ItemArray;
-				for (int i = 1; i <= drd.Count() - 1; i++)
-				{
-					vendor = _switch.vendorSwitch(i, drd[i].ToString(), vendor);
-				}
-				foreach (SqlParameter param in update.Parameters)
-				{
-					if (param.SourceColumn.ToString() == "id")
-					{
-						continue;
-					}
-					else
-					{
-						param.Value = _switch.vendorSqlSwitch(param.SourceColumn, vendor);
-					}
-				}
-				update.ExecuteNonQuery();
-			}
-			sql_conn.Close();
+			////select the vendor being used
+			//sql_conn.ConnectionString = dbconfig.inven_general_conn;
+			//DataSet ds = new DataSet( );
+			//sql_conn.Open( );
+			//SqlDataAdapter sda1 = new SqlDataAdapter(ssp.sqlCMD + " * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal, sql_conn);
+			//sda1.Fill(ds, "vendor");
+			//scb = new SqlCommandBuilder(sda1);
+			////((System.Data.DataTable)(new System.Collections.ArrayList.ArrayListDebugView(ds.Tables.List).Items[0])).Columns.List
+			//if(ds.Tables["vendor"].Rows.Count == 1)
+			//{
+			//	object[] drd = ds.Tables["vendor"].Rows[0].ItemArray;
+			//	for(int i = 1; i <= drd.Count( ) - 1; i++)
+			//	{
+			//		vendor = _switch.vendorSwitch(i, drd[i].ToString( ), vendor);
+			//	}
+			//	foreach(SqlParameter param in update.Parameters)
+			//	{
+			//		if(param.SourceColumn.ToString( ) == "id")
+			//		{
+			//			continue;
+			//		}
+			//		else
+			//		{
+			//			param.Value = _switch.vendorSqlSwitch(param.SourceColumn, vendor);
+			//		}
+			//	}
+			//	update.ExecuteNonQuery( );
+			//}
+			//sql_conn.Close( );
 		}
-
-		public vendorFields delete_part(vendorFields vendor, sqlSearchParameters ssp)
+		public void delete_part()
 		{
-			ssp.searchVal = vendor.id.ToString();
-			SqlCommandBuilder scb = new SqlCommandBuilder();
-			sample_data sampledata = new sample_data();
+			//ssp.searchVal = vendor.id.ToString( );
+			//SqlCommandBuilder scb = new SqlCommandBuilder( );
+			//sample_data sampledata = new sample_data( );
 
-			//select the vendor being used
-			sql_conn.ConnectionString = dbconfig.inven_general_conn;
-			DataSet ds = new DataSet();
-			sql_conn.Open();
-			SqlDataAdapter sda1 = new SqlDataAdapter(ssp.sqlCMD + " * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal, sql_conn);
-			sda1.Fill(ds, "vendor");
-			scb = new SqlCommandBuilder(sda1);
-			object[] drd = ds.Tables["vendor"].Rows[0].ItemArray;
-			for (int i = 1; i <= drd.Count() - 1; i++)
-			{
-				vendor = _switch.vendorSwitch(i, drd[i].ToString(), vendor);
-			}
-			return vendor;
+			////select the vendor being used
+			//sql_conn.ConnectionString = dbconfig.inven_general_conn;
+			//DataSet ds = new DataSet( );
+			//sql_conn.Open( );
+			//SqlDataAdapter sda1 = new SqlDataAdapter(ssp.sqlCMD + " * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal, sql_conn);
+			//sda1.Fill(ds, "vendor");
+			//scb = new SqlCommandBuilder(sda1);
+			//object[] drd = ds.Tables["vendor"].Rows[0].ItemArray;
+			//for(int i = 1; i <= drd.Count( ) - 1; i++)
+			//{
+			//	vendor = _switch.vendorSwitch(i, drd[i].ToString( ), vendor);
+			//}
+			//return vendor;
 		}
-
-		public void query_part(vendorFields vendor)
+		public void query_part()
 		{
 
 		}
 		#endregion part
 		#region vendor
-		public void create_vendor(vendorFields vendor)
+		public void insert_vendor(vendorFields vendor)
 		{
 
 		}
-
 		public void update_vendor(sqlSearchParameters ssp, vendorFields vendor)
 		{
-			List<SqlCommand> sqlCommands = new List<SqlCommand>();
-			SqlCommandBuilder scb = new SqlCommandBuilder();
+			List<SqlCommand> sqlCommands = new List<SqlCommand>( );
+			SqlCommandBuilder scb = new SqlCommandBuilder( );
 			SqlDataAdapter sda;
-			DataSet vendorDataSet = new DataSet();
+			DataSet vendorDataSet = new DataSet( );
 			sql_conn.ConnectionString = dbconfig.inven_general_conn;
-			sql_conn.Open();
+			sql_conn.Open( );
 			sda = new SqlDataAdapter("SELECT TOP(1) * FROM " + ssp.tableName, sql_conn);
 			sda.Fill(vendorDataSet, "vendor");
 			scb = new SqlCommandBuilder(sda);
 			SqlCommand update = scb.GetUpdateCommand(true);
-			ssp.searchVal = vendor.id.ToString();
-			sample_data sampledata = new sample_data();
+			ssp.searchVal = vendor.id.ToString( );
+			sample_data sampledata = new sample_data( );
 
 			//select the vendor being used
 			sql_conn.ConnectionString = dbconfig.inven_general_conn;
-			DataSet ds = new DataSet();
-			sql_conn.Open();
+			DataSet ds = new DataSet( );
+			sql_conn.Open( );
 			SqlDataAdapter sda1 = new SqlDataAdapter(ssp.sqlCMD + " * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal, sql_conn);
 			sda1.Fill(ds, "vendor");
 			scb = new SqlCommandBuilder(sda1);
 			//((System.Data.DataTable)(new System.Collections.ArrayList.ArrayListDebugView(ds.Tables.List).Items[0])).Columns.List
-			if (ds.Tables["vendor"].Rows.Count == 1)
+			if(ds.Tables["vendor"].Rows.Count == 1)
 			{
 				object[] drd = ds.Tables["vendor"].Rows[0].ItemArray;
-				for (int i = 1; i <= drd.Count() - 1; i++)
+				for(int i = 1; i <= drd.Count( ) - 1; i++)
 				{
-					vendor = _switch.vendorSwitch(i, drd[i].ToString(), vendor);
+					vendor = _switch.vendorSwitch(i, drd[i].ToString( ), vendor);
 				}
-				foreach (SqlParameter param in update.Parameters)
+				foreach(SqlParameter param in update.Parameters)
 				{
-					if (param.SourceColumn.ToString() == "id")
+					if(param.SourceColumn.ToString( ) == "id")
 					{
 						continue;
 					}
@@ -452,32 +445,30 @@ namespace RAFtest
 						param.Value = _switch.vendorSqlSwitch(param.SourceColumn, vendor);
 					}
 				}
-				update.ExecuteNonQuery();
+				update.ExecuteNonQuery( );
 			}
-			sql_conn.Close();
+			sql_conn.Close( );
 		}
-
 		public vendorFields delete_vendor(vendorFields vendor, sqlSearchParameters ssp)
 		{
-			ssp.searchVal = vendor.id.ToString();
-			SqlCommandBuilder scb = new SqlCommandBuilder();
-			sample_data sampledata = new sample_data();
+			ssp.searchVal = vendor.id.ToString( );
+			SqlCommandBuilder scb = new SqlCommandBuilder( );
+			sample_data sampledata = new sample_data( );
 
 			//select the vendor being used
 			sql_conn.ConnectionString = dbconfig.inven_general_conn;
-			DataSet ds = new DataSet();
-			sql_conn.Open();
+			DataSet ds = new DataSet( );
+			sql_conn.Open( );
 			SqlDataAdapter sda1 = new SqlDataAdapter(ssp.sqlCMD + " * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal, sql_conn);
 			sda1.Fill(ds, "vendor");
 			scb = new SqlCommandBuilder(sda1);
 			object[] drd = ds.Tables["vendor"].Rows[0].ItemArray;
-			for (int i = 1; i <= drd.Count() - 1; i++)
+			for(int i = 1; i <= drd.Count( ) - 1; i++)
 			{
-				vendor = _switch.vendorSwitch(i, drd[i].ToString(), vendor);
+				vendor = _switch.vendorSwitch(i, drd[i].ToString( ), vendor);
 			}
 			return vendor;
 		}
-
 		public void query_vendor(vendorFields vendor)
 		{
 
