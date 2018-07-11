@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using static RAFtest.datasets;
+using static RAF_to_SQL.datasets;
 
-namespace RAFtest
+namespace RAF_to_SQL
 {
 	class Parse
 	{
@@ -52,14 +52,14 @@ namespace RAFtest
 			return collection;
 		}
 
-		public List<productFields> productParser(List<string> raw)
+		public List<productField> productParser(List<string> raw)
 		{
-			List<productFields> products = new List<productFields>();
-			productFields product = new productFields();
+			List<productField> products = new List<productField>();
+			productField product = new productField();
 			
 			foreach (string line in raw)
 			{
-				product = new productFields();
+				product = new productField();
 				product.parts_reqd = new Dictionary<string, int>();
 				string[] cracked = line.Split(',');
 				for(int i = 0;i < cracked.Count() - 1; i++)
@@ -71,17 +71,17 @@ namespace RAFtest
 			return products;
 		}
 
-		public List<partField> part_parser(List<string> raw)
+		public List<partFieldImport> part_parser(List<string> raw)
 		{
-			List<partField> parts = new List<partField>();
-			partField part = new partField();
+			List<partFieldImport> parts = new List<partFieldImport>();
+			partFieldImport part = new partFieldImport( );
 			foreach(string s in raw)
 			{
-				part = new partField();
+				part = new partFieldImport( );
 				string[] cracked = s.Split(',');
 				for(int i = 0;i < (cracked.Count() - 1); i++)
 				{
-					part = _switch.partSwitch(i, cracked[i], part);
+					part = _switch.partSwitchImport(i, cracked[i], part);
 				}
 				parts.Add(part);
 			}

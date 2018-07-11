@@ -6,9 +6,9 @@ using System.IO;
 using System.Data.Sql;
 using System.Data.SqlClient;
 using System.Data;
-using static RAFtest.datasets;
+using static RAF_to_SQL.datasets;
 
-namespace RAFtest
+namespace RAF_to_SQL
 {
 	class RAF_Read
 	{
@@ -24,7 +24,7 @@ namespace RAFtest
 
 			universalDataPack udp = new universalDataPack();
 			udp.vendorFields = new vendorFields();
-			udp.productFields = new productFields();
+			udp.productFields = new productField();
 			udp.partFields = new partField();
 			multitool multitool = new multitool();
 			multitool.data = new List<universalDataPack>();
@@ -37,7 +37,7 @@ namespace RAFtest
 				while (_fs.Read(b, 0, b.Length) > 0)
 				{
 					//reset container
-					udp.vendorFields = new vendorFields(); udp.productFields = new productFields(); udp.partFields = new partField();
+					udp.vendorFields = new vendorFields(); udp.productFields = new productField(); udp.partFields = new partField();
 					position = 0;
 					string xRaw = b[0].ToString();
 					string x = t.GetString(b.ToArray().Take(b.Length).ToArray());
@@ -106,7 +106,7 @@ namespace RAFtest
 		public fileType datatypeSelect(string _datatype)
 		{
 			fileType ft = new fileType();
-			fileSpecs fs = new fileSpecs();
+			fileSpec fs = new fileSpec();
 			switch (_datatype)
 			{
 				case "v":

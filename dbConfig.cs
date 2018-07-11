@@ -1,8 +1,8 @@
-﻿namespace RAFtest
+﻿namespace RAF_to_SQL
 {
 	class dbConfig
 	{
-		public string inven_general_conn = @"Server=DANDELL\MSSQLSERVER01;Database=Inven_SQL;UID=PublicSQLLogin;PWD=LPI-1958;";
+		public string inven_general_conn = @"Data Source=DANDELL\MSSQLSERVER01;Initial Catalog=Inven_SQL;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 		public string vendorTable = "vendor";
 		public int vendorColCount = 21;
 		public string partVendorRelatTable = "part_vendor_relational";

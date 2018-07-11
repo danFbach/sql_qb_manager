@@ -2,19 +2,19 @@
 using System.Data.SqlClient;
 using System.Collections.Generic;
 using System.Linq;
-using static RAFtest.datasets;
+using static RAF_to_SQL.datasets;
 
-namespace RAFtest
+namespace RAF_to_SQL
 {
 	class dataSwitches
 	{
-		dbConfig dbconfig = new dbConfig();
+		dbConfig dbconfig = new dbConfig( );
 		public string vendorSqlSwitch(string sqlCol, vendorFields v)
 		{
-			switch (sqlCol)
+			switch(sqlCol)
 			{
 				case "id":
-					return v.id.ToString();
+					return v.id.ToString( );
 				case "v_code":
 					return v.v_code;
 				case "business_name":
@@ -61,8 +61,8 @@ namespace RAFtest
 		}
 		public vendorFields vendorSwitch(int i, string rawData, vendorFields v)
 		{
-			if (rawData.Trim() == "") { return v; }
-			switch (i)
+			if(rawData.Trim( ) == "") { return v; }
+			switch(i)
 			{
 				case 1:
 					v.v_code = rawData;
@@ -128,17 +128,17 @@ namespace RAFtest
 					return v;
 			}
 		}
-		public SqlCommand productSqlSwitch(SqlCommand command, productFields product, int id)
+		public SqlCommand productSqlSwitch(SqlCommand command, productField product, int id)
 		{
-			foreach (SqlParameter param in command.Parameters)
+			foreach(SqlParameter param in command.Parameters)
 			{
-				switch (param.SourceColumn)
+				switch(param.SourceColumn)
 				{
 					case "Id":
 						param.Value = id;
 						continue;
 					case "Product_Number":
-						param.Value = product.Product_Number;
+						param.Value = product.Product_Number.Trim();
 						continue;
 					case "Description":
 						param.Value = product.Description;
@@ -182,14 +182,14 @@ namespace RAFtest
 		}
 		public List<SqlCommand> productCheckSwitch(List<List<rawDataAndType>> rawData, SqlCommand update)
 		{
-			List<SqlCommand> commandPack = new List<SqlCommand>();
+			List<SqlCommand> commandPack = new List<SqlCommand>( );
 			SqlCommand updateTemp;
-			foreach (List<rawDataAndType> data in rawData)
+			foreach(List<rawDataAndType> data in rawData)
 			{
-				updateTemp = update.Clone();
-				for (int i = 0; i < dbconfig.productColCount; i++)
+				updateTemp = update.Clone( );
+				for(int i = 0; i < dbconfig.productColCount; i++)
 				{
-					switch (i)
+					switch(i)
 					{
 						case 0:
 							update.Parameters["Product_Number"].Value = data[i].value;
@@ -199,51 +199,51 @@ namespace RAFtest
 							break;
 						case 2:
 							bool rx0 = decimal.TryParse(data[i].value, out decimal dx0);
-							if (rx0) { update.Parameters["Price"].Value = dx0; }
+							if(rx0) { update.Parameters["Price"].Value = dx0; }
 							break;
 						case 3:
 							bool rx1 = decimal.TryParse(data[i].value, out decimal dx1);
-							if (rx1) { update.Parameters["Weight"].Value = dx1; }
+							if(rx1) { update.Parameters["Weight"].Value = dx1; }
 							break;
 						case 4:
 							bool r0 = decimal.TryParse(data[i].value, out decimal i0);
-							if (r0) { update.Parameters["Master_Units"].Value = i0; }
+							if(r0) { update.Parameters["Master_Units"].Value = i0; }
 							break;
 						case 5:
 							bool r1 = decimal.TryParse(data[i].value, out decimal i1);
-							if (r1) { update.Parameters["Cubic_Feet"].Value = i1; }
+							if(r1) { update.Parameters["Cubic_Feet"].Value = i1; }
 							break;
 						case 6:
 							bool r2 = int.TryParse(data[i].value, out int i2);
-							if (r2) { update.Parameters["quantity_on_hand"].Value = i2; }
+							if(r2) { update.Parameters["quantity_on_hand"].Value = i2; }
 							break;
 						case 7:
 							bool r3 = int.TryParse(data[i].value, out int i3);
-							if (r3) { update.Parameters["annual_use"].Value = i3; }
+							if(r3) { update.Parameters["annual_use"].Value = i3; }
 							break;
 						case 8:
 							bool r4 = int.TryParse(data[i].value, out int i4);
-							if (r4) { update.Parameters["sales_last_period"].Value = i4; }
+							if(r4) { update.Parameters["sales_last_period"].Value = i4; }
 							break;
 						case 9:
 							bool r5 = int.TryParse(data[i].value, out int i5);
-							if (r5) { update.Parameters["ytd_sales"].Value = i5; }
+							if(r5) { update.Parameters["ytd_sales"].Value = i5; }
 							break;
 						case 10:
 							bool r6 = int.TryParse(data[i].value, out int i6);
-							if (r6) { update.Parameters["gross"].Value = i6; }
+							if(r6) { update.Parameters["gross"].Value = i6; }
 							break;
 						case 11:
 							bool r7 = decimal.TryParse(data[i].value, out decimal i7);
-							if (r7) { update.Parameters["assembly_time_secs"].Value = i7; }
+							if(r7) { update.Parameters["assembly_time_secs"].Value = i7; }
 							break;
 						case 12:
 							bool r8 = int.TryParse(data[i].value, out int i8);
-							if (r8) { update.Parameters["product_code"].Value = i8; }
+							if(r8) { update.Parameters["product_code"].Value = i8; }
 							break;
 						case 13:
 							bool r9 = int.TryParse(data[i].value, out int i9);
-							if (r9) { update.Parameters["string_along"].Value = i9; }
+							if(r9) { update.Parameters["string_along"].Value = i9; }
 							break;
 					}
 				}
@@ -251,93 +251,93 @@ namespace RAFtest
 			}
 			return commandPack;
 		}
-		public SqlCommand prodSwitch(List<rawDataAndType> dataFromSql, productFields newData, SqlCommand update)
+		public SqlCommand prodSwitch(List<rawDataAndType> dataFromSql, productField newData, SqlCommand update)
 		{
-			
-			for (int i = 1; i < dataFromSql.Count(); i++)
+
+			for(int i = 1; i < dataFromSql.Count( ); i++)
 			{
-				switch (i)
+				switch(i)
 				{
 					case 1:
-						if (dataFromSql[i].value.Equals(newData.Product_Number)) { update.Parameters[i].Value = newData.Product_Number; update.Parameters[0].Value = dataFromSql[0].value; }
+						if(dataFromSql[i].value.Equals(newData.Product_Number)) { update.Parameters[i].Value = newData.Product_Number; update.Parameters[0].Value = dataFromSql[0].value; }
 						else { return null; }
 						continue;
 					case 2:
-						if (!dataFromSql[i].value.Equals(newData.Description)) { update.Parameters[i].Value = newData.Description; }
+						if(!dataFromSql[i].value.Equals(newData.Description)) { update.Parameters[i].Value = newData.Description; }
 						else { update.Parameters[i].Value = dataFromSql[i].value; }
 						continue;
 					case 3:
-						if (!dataFromSql[i].value.Equals(newData.Price)) { update.Parameters[i].Value = newData.Price; }
+						if(!dataFromSql[i].value.Equals(newData.Price)) { update.Parameters[i].Value = newData.Price; }
 						else { update.Parameters[i].Value = dataFromSql[i].value; }
 						continue;
 					//bool rx0 = decimal.TryParse(dataFromSql[i].value, out decimal dx0);
 					//if (rx0) { newData.Price = dx0; }
 					//break;
 					case 4:
-						if (!dataFromSql[i].value.Equals(newData.Weight)) { update.Parameters[i].Value = newData.Weight; }
+						if(!dataFromSql[i].value.Equals(newData.Weight)) { update.Parameters[i].Value = newData.Weight; }
 						else { update.Parameters[i].Value = dataFromSql[i].value; }
 						continue;
 					//bool rx1 = decimal.TryParse(dataFromSql[i].value, out decimal dx1);
 					//if (rx1) { newData.Weight = dx1; }
 					//break;
 					case 5:
-						if (!dataFromSql[i].value.Equals(newData.Master_Units)) { update.Parameters[i].Value = newData.Master_Units; }
+						if(!dataFromSql[i].value.Equals(newData.Master_Units)) { update.Parameters[i].Value = newData.Master_Units; }
 						else { update.Parameters[i].Value = dataFromSql[i].value; }
 						continue;
-						//bool r0 = decimal.TryParse(dataFromSql[i].value, out decimal i0);
-						//if (r0) { newData.Master_Units = i0; }
-						//break;
+					//bool r0 = decimal.TryParse(dataFromSql[i].value, out decimal i0);
+					//if (r0) { newData.Master_Units = i0; }
+					//break;
 					case 6:
-						if (!dataFromSql[i].value.Equals(newData.Cubic_Feet)) { update.Parameters[i].Value = newData.Cubic_Feet; }
+						if(!dataFromSql[i].value.Equals(newData.Cubic_Feet)) { update.Parameters[i].Value = newData.Cubic_Feet; }
 						else { update.Parameters[i].Value = dataFromSql[i].value; }
 						continue;
-						//bool r1 = decimal.TryParse(dataFromSql[i].value, out decimal i1);
-						//if (r1) { newData.Cubic_Feet = i1; }
-						//break;
+					//bool r1 = decimal.TryParse(dataFromSql[i].value, out decimal i1);
+					//if (r1) { newData.Cubic_Feet = i1; }
+					//break;
 					case 7:
-						if (!dataFromSql[i].value.Equals(newData.quantity_on_hand)) { update.Parameters[i].Value = newData.quantity_on_hand; }
+						if(!dataFromSql[i].value.Equals(newData.quantity_on_hand)) { update.Parameters[i].Value = newData.quantity_on_hand; }
 						else { update.Parameters[i].Value = dataFromSql[i].value; }
 						continue;
-						//bool r2 = int.TryParse(dataFromSql[i].value, out int i2);
-						//if (r2) { newData.quantity_on_hand = i2; }
-						//break;
+					//bool r2 = int.TryParse(dataFromSql[i].value, out int i2);
+					//if (r2) { newData.quantity_on_hand = i2; }
+					//break;
 					case 8:
-						if (!dataFromSql[i].value.Equals(newData.annual_use)) { update.Parameters[i].Value = newData.annual_use; }
+						if(!dataFromSql[i].value.Equals(newData.annual_use)) { update.Parameters[i].Value = newData.annual_use; }
 						else { update.Parameters[i].Value = dataFromSql[i].value; }
 						continue;
-						//bool r3 = int.TryParse(dataFromSql[i].value, out int i3);
-						//if (r3) { newData.annual_use = i3; }
-						//break;
+					//bool r3 = int.TryParse(dataFromSql[i].value, out int i3);
+					//if (r3) { newData.annual_use = i3; }
+					//break;
 					case 9:
-						if (!dataFromSql[i].value.Equals(newData.sales_last_period)) { update.Parameters[i].Value = newData.sales_last_period; }
+						if(!dataFromSql[i].value.Equals(newData.sales_last_period)) { update.Parameters[i].Value = newData.sales_last_period; }
 						else { update.Parameters[i].Value = dataFromSql[i].value; }
 						continue;
 					//bool r4 = int.TryParse(dataFromSql[i].value, out int i4);
 					//if (r4) { newData.sales_last_period = i4; }
 					//break;
 					case 10:
-						if (!dataFromSql[i].value.Equals(newData.ytd_sales)) { update.Parameters[i].Value = newData.ytd_sales; }
+						if(!dataFromSql[i].value.Equals(newData.ytd_sales)) { update.Parameters[i].Value = newData.ytd_sales; }
 						else { update.Parameters[i].Value = dataFromSql[i].value; }
 						continue;
-						//bool r5 = int.TryParse(dataFromSql[i].value, out int i5);
-						//if (r5) { newData.ytd_sales = i5; }
-						//break;
+					//bool r5 = int.TryParse(dataFromSql[i].value, out int i5);
+					//if (r5) { newData.ytd_sales = i5; }
+					//break;
 					case 11:
-						if (!dataFromSql[i].value.Equals(newData.gross)) { update.Parameters[i].Value = newData.gross; }
+						if(!dataFromSql[i].value.Equals(newData.gross)) { update.Parameters[i].Value = newData.gross; }
 						else { update.Parameters[i].Value = dataFromSql[i].value; }
 						continue;
 					//bool r6 = int.TryParse(dataFromSql[i].value, out int i6);
 					//if (r6) { newData.gross = i6; }
 					//break;
 					case 12:
-						if (!dataFromSql[i].value.Equals(newData.assembly_time_secs)) { update.Parameters[i].Value = newData.assembly_time_secs; }
+						if(!dataFromSql[i].value.Equals(newData.assembly_time_secs)) { update.Parameters[i].Value = newData.assembly_time_secs; }
 						else { update.Parameters[i].Value = dataFromSql[i].value; }
 						continue;
-						//bool r7 = decimal.TryParse(dataFromSql[i].value, out decimal i7);
-						//if (r7) { newData.assembly_time_secs = i7; }
-						//break;
+					//bool r7 = decimal.TryParse(dataFromSql[i].value, out decimal i7);
+					//if (r7) { newData.assembly_time_secs = i7; }
+					//break;
 					case 13:
-						if (!dataFromSql[i].value.Equals(newData.product_code)) { update.Parameters[i].Value = newData.product_code; }
+						if(!dataFromSql[i].value.Equals(newData.product_code)) { update.Parameters[i].Value = newData.product_code; }
 						else { update.Parameters[i].Value = dataFromSql[i].value; }
 						continue;
 						//bool r8 = int.TryParse(dataFromSql[i].value, out int i8);
@@ -347,10 +347,11 @@ namespace RAFtest
 			}
 			return update;
 		}
-		public productFields prodSwitch(int i, string rawData, productFields p)
+		public productField prodSwitch(int i, object _rawData, productField p)
 		{
-			if (rawData.Trim() == "") { return p; }
-			switch (i)
+			string rawData = _rawData.ToString( );
+			if(rawData.Trim( ) == "") { return p; }
+			switch(i)
 			{
 				case 0:
 					p.Product_Number = rawData;
@@ -359,52 +360,40 @@ namespace RAFtest
 					p.Description = rawData;
 					break;
 				case 2:
-					bool rx0 = decimal.TryParse(rawData, out decimal dx0);
-					if (rx0) { p.Price = dx0; }
+					if(decimal.TryParse(rawData, out decimal dx0)) { p.Price = dx0; }
 					break;
 				case 3:
-					bool rx1 = decimal.TryParse(rawData, out decimal dx1);
-					if (rx1) { p.Weight = dx1; }
+					if(decimal.TryParse(rawData, out decimal dx1)) { p.Weight = dx1; }
 					break;
 				case 4:
-					bool r0 = decimal.TryParse(rawData, out decimal i0);
-					if (r0) { p.Master_Units = i0; }
+					if(decimal.TryParse(rawData, out decimal i0)) { p.Master_Units = i0; }
 					break;
 				case 5:
-					bool r1 = decimal.TryParse(rawData, out decimal i1);
-					if (r1) { p.Cubic_Feet = i1; }
+					if(decimal.TryParse(rawData, out decimal i1)) { p.Cubic_Feet = i1; }
 					break;
 				case 6:
-					bool r2 = int.TryParse(rawData, out int i2);
-					if (r2) { p.quantity_on_hand = i2; }
+					if(int.TryParse(rawData, out int i2)) { p.quantity_on_hand = i2; }
 					break;
 				case 7:
-					bool r3 = int.TryParse(rawData, out int i3);
-					if (r3) { p.annual_use = i3; }
+					if(int.TryParse(rawData, out int i3)) { p.annual_use = i3; }
 					break;
 				case 8:
-					bool r4 = int.TryParse(rawData, out int i4);
-					if (r4) { p.sales_last_period = i4; }
+					if(int.TryParse(rawData, out int i4)) { p.sales_last_period = i4; }
 					break;
 				case 9:
-					bool r5 = int.TryParse(rawData, out int i5);
-					if (r5) { p.ytd_sales = i5; }
+					if(int.TryParse(rawData, out int i5)) { p.ytd_sales = i5; }
 					break;
 				case 10:
-					bool r6 = int.TryParse(rawData, out int i6);
-					if (r6) { p.gross = i6; }
+					if(int.TryParse(rawData, out int i6)) { p.gross = i6; }
 					break;
 				case 11:
-					bool r7 = decimal.TryParse(rawData, out decimal i7);
-					if (r7) { p.assembly_time_secs = i7; }
+					if(decimal.TryParse(rawData, out decimal i7)) { p.assembly_time_secs = i7; }
 					break;
 				case 12:
-					bool r8 = int.TryParse(rawData, out int i8);
-					if (r8) { p.product_code = i8; }
+					if(int.TryParse(rawData, out int i8)) { p.product_code = i8; }
 					break;
 				case 13:
-					bool r9 = int.TryParse(rawData, out int i9);
-					if (r9) { p.string_along = i9; }
+					if(int.TryParse(rawData, out int i9)) { p.string_along = i9; }
 					break;
 				case 14:
 				case 15:
@@ -428,40 +417,42 @@ namespace RAFtest
 				case 33:
 				case 34:
 				case 35:
-					string[] rawArray = rawData.TrimStart().Split(' ');
-					bool part = int.TryParse(rawArray[0], out int xx);
-					bool qty = int.TryParse(rawArray[1], out int yy);
-					if ((part && qty) && (xx != 0))
+					string[] rawArray = rawData.TrimStart( ).Split(' ');
+					if((int.TryParse(rawArray[0], out int xx) && int.TryParse(rawArray[1], out int yy)) && (xx != 0))
 					{
-						if (!p.parts_reqd.ContainsKey(xx.ToString())) { p.parts_reqd.Add(xx.ToString(), yy); }
-						else { p.parts_reqd[xx.ToString()] += yy; }
+						if(!p.parts_reqd.ContainsKey(xx.ToString( ))) { p.parts_reqd.Add(xx.ToString( ), yy); }
+						else { p.parts_reqd[xx.ToString( )] += yy; }
 					}
 					break;
 			}
 			return p;
 		}
-		public SqlCommand partSqlParamSwitch(SqlCommand command, partField part, int id)
+		public SqlCommand partSqlParamSwitch(SqlCommand command, partFieldImport part, int id)
 		{
 			DateTime _base = DateTime.Parse("1/1/1988");
-			foreach (SqlParameter param in command.Parameters)
+			foreach(SqlParameter param in command.Parameters)
 			{
-				switch (param.SourceColumn)
+				switch(param.SourceColumn)
 				{
 					case "Id":
 						param.Value = id;
 						continue;
 					case "part_number":
-						if (part.part_number == null)
+						param.Value = part.part_name.Substring(2, 4);
+						//param.Value = part.part_number;
+						continue;
+					case "part_name":
+						if(part.part_name == null)
 						{
 							param.Value = "";
 						}
 						else
 						{
-							param.Value = part.part_number;
+							param.Value = part.part_name;
 						}
 						continue;
 					case "description":
-						if (part.description == null)
+						if(part.description == null)
 						{
 							param.Value = "";
 						}
@@ -483,7 +474,7 @@ namespace RAFtest
 						param.Value = part.lead_time_in_weeks;
 						continue;
 					case "listed_vendor_id":
-						if (part.listed_vendor_id == null)
+						if(part.listed_vendor_id == null)
 						{
 							param.Value = "";
 						}
@@ -498,14 +489,14 @@ namespace RAFtest
 					case "price":
 						param.Value = part.price;
 						continue;
-					case "quantity_to_order":
-						param.Value = part.quantity_to_order;
+					case "quantity_on_order":
+						param.Value = part.quantity_on_order;
 						continue;
 					case "listed_PO_num":
 						param.Value = part.listed_PO_num;
 						continue;
 					case "delivery_date_1":
-						if (part.delivery_date_1 > 0)
+						if(part.delivery_date_1 > 0)
 						{
 							param.Value = _base.AddDays(part.delivery_date_1);
 						}
@@ -515,7 +506,7 @@ namespace RAFtest
 						}
 						continue;
 					case "delivery_date_2":
-						if (part.delivery_date_2 > 0)
+						if(part.delivery_date_2 > 0)
 						{
 							param.Value = _base.AddDays(part.delivery_date_2);
 						}
@@ -525,7 +516,7 @@ namespace RAFtest
 						}
 						continue;
 					case "delivery_date_3":
-						if (part.delivery_date_3 > 0)
+						if(part.delivery_date_3 > 0)
 						{
 							param.Value = _base.AddDays(part.delivery_date_3);
 						}
@@ -535,7 +526,7 @@ namespace RAFtest
 						}
 						continue;
 					case "delivery_date_4":
-						if (part.delivery_date_4 > 0)
+						if(part.delivery_date_4 > 0)
 						{
 							param.Value = _base.AddDays(part.delivery_date_4);
 						}
@@ -599,7 +590,7 @@ namespace RAFtest
 						param.Value = part.list_price;
 						continue;
 					case "memo":
-						if (part.memo == null) { param.Value = ""; }
+						if(part.memo == null) { param.Value = ""; }
 						else { param.Value = part.memo; }
 						continue;
 					case "picture_path":
@@ -612,150 +603,247 @@ namespace RAFtest
 			}
 			return command;
 		}
-		public partField partSwitch(int i, string rawData, partField p)
+		public partField partSwitch(int i, object _rawData, partField p)
 		{
-			if (rawData.Trim() == "") { return p; }
-			switch (i)
+			if(_rawData.ToString( ).Trim( ) == "") { return p; }
+			switch(i)
 			{
+				case -1:
+					if(int.TryParse(_rawData.ToString( ), out int xx0)) { p.part_number = xx0; }
+					return p;
 				case 0:
-					p.part_number = rawData;
+					p.part_name = _rawData.ToString( );
 					return p;
 				case 1:
-					p.description = rawData;
+					p.description = _rawData.ToString( );
 					return p;
 				case 2:
-					bool r0 = int.TryParse(rawData, out int x0);
-					if (r0) { p.specification = x0; }
+					if(int.TryParse(_rawData.ToString( ), out int x0)) { p.specification = x0; }
 					return p;
 				case 3:
-					bool r1 = int.TryParse(rawData, out int x1);
-					if (r1) { p.special_instruction = x1; }
+					if(int.TryParse(_rawData.ToString( ), out int x1)) { p.special_instruction = x1; }
 					return p;
 				case 4:
-					bool r2 = int.TryParse(rawData, out int x2);
-					if (r2) { p.years_use = x2; }
+					if(int.TryParse(_rawData.ToString( ), out int x2)) { p.years_use = x2; }
 					return p;
 				case 5:
-					bool r3 = int.TryParse(rawData, out int x3);
-					if (r3) { p.lead_time_in_weeks = x3; }
+					if(int.TryParse(_rawData.ToString( ), out int x3)) { p.lead_time_in_weeks = x3; }
 					return p;
 				case 6:
-					p.listed_vendor_id = rawData;
+					p.listed_vendor_id = _rawData.ToString( );
 					return p;
 				case 7:
-					bool r4 = int.TryParse(rawData, out int x4);
-					if (r4) { p.best_quantity_to_order = x4; }
+					if(int.TryParse(_rawData.ToString( ), out int x4)) { p.best_quantity_to_order = x4; }
 					return p;
 				case 8:
-					bool r5 = int.TryParse(rawData, out int x5);
-					if (r5) { p.finished_weight = x5; }
+					if(int.TryParse(_rawData.ToString( ), out int x5)) { p.finished_weight = x5; }
 					return p;
 				case 9:
-					bool r6 = decimal.TryParse(rawData, out decimal x6);
-					if (r6) { p.price = x6; }
+					if(decimal.TryParse(_rawData.ToString( ), out decimal x6)) { p.price = x6; }
 					return p;
 				case 10:
-					bool r7 = int.TryParse(rawData, out int x7);
-					if (r7) { p.quantity_to_order = x7; }
+					if(int.TryParse(_rawData.ToString( ), out int x7)) { p.quantity_on_order = x7; }
 					return p;
 				case 11:
-					bool r28 = int.TryParse(rawData, out int x28);
-					if (r28) { p.listed_PO_num = x28; }
+					if(int.TryParse(_rawData.ToString( ), out int x28)) { p.listed_PO_num = x28; }
 					return p;
 				case 12:
-					bool dr0 = int.TryParse(rawData, out int dt0);
-					if (dr0) { p.delivery_date_1 = dt0; }
+					if(DateTime.TryParse(_rawData.ToString( ), out DateTime dt0)) { p.delivery_date_1 = dt0; }
 					return p;
 				case 13:
-					bool dr1 = int.TryParse(rawData, out int dt1);
-					if (dr1) { p.delivery_date_2 = dt1; }
+					if(DateTime.TryParse(_rawData.ToString( ), out DateTime dt1)) { p.delivery_date_2 = dt1; }
 					return p;
 				case 14:
-					bool dr2 = int.TryParse(rawData, out int dt2);
-					if (dr2) { p.delivery_date_3 = dt2; }
+					if(DateTime.TryParse(_rawData.ToString( ), out DateTime dt2)) { p.delivery_date_3 = dt2; }
 					return p;
 				case 15:
-					bool dr3 = int.TryParse(rawData, out int dt3);
-					if (dr3) { p.delivery_date_4 = dt3; }
+					if(DateTime.TryParse(_rawData.ToString( ), out DateTime dt3)) { p.delivery_date_4 = dt3; }
 					return p;
 				case 16:
-					bool r8 = decimal.TryParse(rawData, out decimal x8);
-					if (r8) { p.added_cost = x8; }
+					if(decimal.TryParse(_rawData.ToString( ), out decimal x8)) { p.added_cost = x8; }
 					return p;
 				case 17:
-					bool r9 = int.TryParse(rawData, out int x9);
-					if (r9) { p.cycle_time_secs_second_machine = x9; }
+					if(int.TryParse(_rawData.ToString( ), out int x9)) { p.cycle_time_secs_second_machine = x9; }
 					return p;
 				case 18:
-					bool r10 = decimal.TryParse(rawData, out decimal x10);
-					if (r10) { p.added_cost_machine_2 = x10; }
+					if(decimal.TryParse(_rawData.ToString( ), out decimal x10)) { p.added_cost_machine_2 = x10; }
 					return p;
 				case 19:
-					bool r11 = int.TryParse(rawData, out int x11);
-					if (r11) { p.quantity_on_hand = x11; }
+					if(int.TryParse(_rawData.ToString( ), out int x11)) { p.quantity_on_hand = x11; }
 					return p;
 				case 20:
-					bool r27 = int.TryParse(rawData, out int x27);
-					if (r27) { p.raw_material_number = x27; }
+					if(int.TryParse(_rawData.ToString( ), out int x27)) { p.raw_material_number = x27; }
 					return p;
 				case 21:
-					bool r12 = decimal.TryParse(rawData, out decimal x12);
-					if (r12) { p.material_weight = x12; }
+					if(decimal.TryParse(_rawData.ToString( ), out decimal x12)) { p.material_weight = x12; }
 					return p;
 				case 22:
-					bool r13 = int.TryParse(rawData, out int x13);
-					if (r13) { p.ytd_sales = x13; }
+					if(int.TryParse(_rawData.ToString( ), out int x13)) { p.ytd_sales = x13; }
 					return p;
 				case 23:
-					bool r14 = decimal.TryParse(rawData, out decimal x14);
-					if (r14) { p.latest_quote = x14; }
+					if(decimal.TryParse(_rawData.ToString( ), out decimal x14)) { p.latest_quote = x14; }
 					return p;
 				case 24:
-					bool r15 = int.TryParse(rawData, out int x15);
-					if (r15) { p.quantity_assembled = x15; }
+					if(int.TryParse(_rawData.ToString( ), out int x15)) { p.quantity_assembled = x15; }
 					return p;
 				case 25:
-					bool r21 = int.TryParse(rawData, out int x21);
-					if (r21) { p.cycle_time = x21; }
+					if(int.TryParse(_rawData.ToString( ), out int x21)) { p.cycle_time = x21; }
 					return p;
 				case 26:
-					bool r22 = int.TryParse(rawData, out int x22);
-					if (r22) { p.machine_num = x22; }
+					if(int.TryParse(_rawData.ToString( ), out int x22)) { p.machine_num = x22; }
 					return p;
 				case 27:
-					bool r17 = int.TryParse(rawData, out int x17);
-					if (r17) { p.last_years_use = x17; }
+					if(decimal.TryParse(_rawData.ToString( ), out decimal xx24)) { p.machine_rate = xx24; }
 					return p;
 				case 28:
-					bool r18 = int.TryParse(rawData, out int x18);
-					if (r18) { p.weeks_cushion = x18; }
+					if(int.TryParse(_rawData.ToString( ), out int x18)) { p.last_years_use = x18; }
 					return p;
 				case 29:
-					bool r19 = int.TryParse(rawData, out int x19);
-					if (r19) { p.allocated = x19; }
+					if(int.TryParse(_rawData.ToString( ), out int x19)) { p.weeks_cushion = x19; }
 					return p;
 				case 30:
-					bool r20 = int.TryParse(rawData, out int x20);
-					if (r20) { p.setup_time = x20; }
+					if(int.TryParse(_rawData.ToString( ), out int x17)) { p.allocated = x17; }
 					return p;
 				case 31:
-					bool r23 = int.TryParse(rawData, out int x23);
-					if (r23) { p.raw_material_2 = x23; }
+					if(int.TryParse(_rawData.ToString( ), out int x20)) { p.setup_time = x20; }
 					return p;
 				case 32:
-					bool r24 = decimal.TryParse(rawData, out decimal x24);
-					if (r24) { p.list_price = x24; }
+					if(int.TryParse(_rawData.ToString( ), out int x23)) { p.raw_material_2 = x23; }
 					return p;
 				case 33:
-					p.memo = rawData;
+					if(decimal.TryParse(_rawData.ToString( ), out decimal x24)) { p.list_price = x24; }
 					return p;
 				case 34:
-					bool r25 = int.TryParse(rawData, out int x25);
-					if (r25) { p.picture_path = x25; }
+					p.memo = _rawData.ToString( );
 					return p;
 				case 35:
-					bool r26 = int.TryParse(rawData, out int x26);
-					if (r26) { p.drawing_path = x26; }
+					if(int.TryParse(_rawData.ToString( ), out int x26)) { p.picture_path = x26; }
+					return p;
+				case 36:
+					if(int.TryParse(_rawData.ToString( ), out int x25)) { p.drawing_path = x25; }
+					return p;
+				default:
+					return p;
+			}
+		}
+		public partFieldImport partSwitchImport(int i, object _rawData, partFieldImport p)
+		{
+			if(_rawData.ToString( ).Trim( ) == "") { return p; }
+			switch(i)
+			{
+				case -1:
+					if(int.TryParse(_rawData.ToString( ), out int xx0)) { p.part_number = xx0; }
+					return p;
+				case 0:
+					p.part_name = _rawData.ToString( );
+					return p;
+				case 1:
+					p.description = _rawData.ToString( );
+					return p;
+				case 2:
+					if(int.TryParse(_rawData.ToString( ), out int x0)) { p.specification = x0; }
+					return p;
+				case 3:
+					if(int.TryParse(_rawData.ToString( ), out int x1)) { p.special_instruction = x1; }
+					return p;
+				case 4:
+					if(int.TryParse(_rawData.ToString( ), out int x2)) { p.years_use = x2; }
+					return p;
+				case 5:
+					if(int.TryParse(_rawData.ToString( ), out int x3)) { p.lead_time_in_weeks = x3; }
+					return p;
+				case 6:
+					p.listed_vendor_id = _rawData.ToString( );
+					return p;
+				case 7:
+					if(int.TryParse(_rawData.ToString( ), out int x4)) { p.best_quantity_to_order = x4; }
+					return p;
+				case 8:
+					if(int.TryParse(_rawData.ToString( ), out int x5)) { p.finished_weight = x5; }
+					return p;
+				case 9:
+					if(decimal.TryParse(_rawData.ToString( ), out decimal x6)) { p.price = x6; }
+					return p;
+				case 10:
+					if(int.TryParse(_rawData.ToString( ), out int x7)) { p.quantity_on_order = x7; }
+					return p;
+				case 11:
+					if(int.TryParse(_rawData.ToString( ), out int x28)) { p.listed_PO_num = x28; }
+					return p;
+				case 12:
+					if(int.TryParse(_rawData.ToString( ), out int dt0)) { p.delivery_date_1 = dt0; }
+					return p;
+				case 13:
+					if(int.TryParse(_rawData.ToString( ), out int dt1)) { p.delivery_date_2 = dt1; }
+					return p;
+				case 14:
+					if(int.TryParse(_rawData.ToString( ), out int dt2)) { p.delivery_date_3 = dt2; }
+					return p;
+				case 15:
+					if(int.TryParse(_rawData.ToString( ), out int dt3)) { p.delivery_date_4 = dt3; }
+					return p;
+				case 16:
+					if(decimal.TryParse(_rawData.ToString( ), out decimal x8)) { p.added_cost = x8; }
+					return p;
+				case 17:
+					if(int.TryParse(_rawData.ToString( ), out int x9)) { p.cycle_time_secs_second_machine = x9; }
+					return p;
+				case 18:
+					if(decimal.TryParse(_rawData.ToString( ), out decimal x10)) { p.added_cost_machine_2 = x10; }
+					return p;
+				case 19:
+					if(int.TryParse(_rawData.ToString( ), out int x11)) { p.quantity_on_hand = x11; }
+					return p;
+				case 20:
+					if(int.TryParse(_rawData.ToString( ), out int x27)) { p.raw_material_number = x27; }
+					return p;
+				case 21:
+					if(decimal.TryParse(_rawData.ToString( ), out decimal x12)) { p.material_weight = x12; }
+					return p;
+				case 22:
+					if(int.TryParse(_rawData.ToString( ), out int x13)) { p.ytd_sales = x13; }
+					return p;
+				case 23:
+					if(decimal.TryParse(_rawData.ToString( ), out decimal x14)) { p.latest_quote = x14; }
+					return p;
+				case 24:
+					if(int.TryParse(_rawData.ToString( ), out int x15)) { p.quantity_assembled = x15; }
+					return p;
+				case 25:
+					if(int.TryParse(_rawData.ToString( ), out int x21)) { p.cycle_time = x21; }
+					return p;
+				case 26:
+					if(int.TryParse(_rawData.ToString( ), out int x22)) { p.machine_num = x22; }
+					return p;
+				case 27:
+					if(decimal.TryParse(_rawData.ToString( ), out decimal xx24)) { p.machine_rate = xx24; }
+					return p;
+				case 28:
+					if(int.TryParse(_rawData.ToString( ), out int x18)) { p.last_years_use = x18; }
+					return p;
+				case 29:
+					if(int.TryParse(_rawData.ToString( ), out int x19)) { p.weeks_cushion = x19; }
+					return p;
+				case 30:
+					if(int.TryParse(_rawData.ToString( ), out int x17)) { p.allocated = x17; }
+					return p;
+				case 31:
+					if(int.TryParse(_rawData.ToString( ), out int x20)) { p.setup_time = x20; }
+					return p;
+				case 32:
+					if(int.TryParse(_rawData.ToString( ), out int x23)) { p.raw_material_2 = x23; }
+					return p;
+				case 33:
+					if(decimal.TryParse(_rawData.ToString( ), out decimal x24)) { p.list_price = x24; }
+					return p;
+				case 34:
+					p.memo = _rawData.ToString( );
+					return p;
+				case 35:
+					if(int.TryParse(_rawData.ToString( ), out int x26)) { p.picture_path = x26; }
+					return p;
+				case 36:
+					if(int.TryParse(_rawData.ToString( ), out int x25)) { p.drawing_path = x25; }
 					return p;
 				default:
 					return p;
