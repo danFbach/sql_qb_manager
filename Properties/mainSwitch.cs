@@ -35,7 +35,11 @@ namespace RAF_to_SQL
 								if(prodQ > 0 && prodQ < 1000)
 								{
 									prodQ += 90000;
-									send = dbm.query_product(prodQ.ToString( ));
+									ssp.tableName = "Inven_SQL.dbo.Products";
+									ssp.searchVal = prodQ.ToString( );
+									ssp.searchKey = "Product_Number";
+									ssp.sqlCMD = "SELECT * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
+									send = dbm.selectQuery(ssp);
 									if(send != null)
 									{
 										w.lineWrite(send, spec.sendbackpath);
@@ -49,9 +53,11 @@ namespace RAF_to_SQL
 								if(partQ > 0 && partQ < 4500)
 								{
 									partQ += 1000;
-									ssp.sqlCMD = "SELECT * FROM Parts WHERE part_number = " + partQ.ToString( );
-									ssp.tableName = "Parts";
-									send = dbm.query_part(ssp);
+									ssp.tableName = "Inven_SQL.dbo.Parts";
+									ssp.searchVal = partQ.ToString( );
+									ssp.searchKey = "part_number";
+									ssp.sqlCMD = "SELECT * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
+									send = dbm.selectQuery(ssp);
 									if(send != null)
 									{
 										w.lineWrite(send, spec.sendbackpath);
@@ -71,10 +77,11 @@ namespace RAF_to_SQL
 							}
 							else if(int.TryParse(_args[2], out int idQuery))
 							{
+								ssp.tableName = "Inven_SQL.dbo.vendor";
+								ssp.searchVal = idQuery.ToString( );
 								ssp.searchKey = "Id";
-								ssp.searchVal = idQuery.ToString( ).Trim( );
 								ssp.sqlCMD = "SELECT * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
-								spec.response = dbm.query_vendor(ssp);
+								send = dbm.selectQuery(ssp);
 							}
 							else if(_args[2].Length > 1)
 							{
@@ -84,7 +91,11 @@ namespace RAF_to_SQL
 								ssp.sqlCMD = "SELECT * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = '" + ssp.searchVal + "'";
 								spec.response = dbm.query_vendor(ssp);
 							}
-							if(spec.response.Count > 0) { w.listWrite(spec.response, spec.sendbackpath); }
+							if(spec.response.Count == 1)
+							{
+								w.lineWrite(spec.response[0], spec.sendbackpath);
+							}
+							else if(spec.response.Count > 1) { w.listWrite(spec.response, spec.sendbackpath); }
 							break;
 					}
 					break;
@@ -177,6 +188,29 @@ namespace RAF_to_SQL
 					break;
 			}
 
+		}
+		public void importManager()
+		{
+			Parse parse = new Parse( );
+			//List<string> raw = r.readFromFile(@"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\PRODDATA.txt");
+			//List<productField> products = parse.productParser(raw);
+			//dbm.importProducts(products);
+			//dbm.importProductParts(products);
+
+			//List<string> raw = r.readFromFile(@"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\PARTDATA.txt");
+			//List<partFieldImport> parts = parse.part_parser(raw);
+			//dbm.importParts(parts);
+
+			//List<string> raw = r.readFromFile(@"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\STRLDATA.TXT");
+			//parse.stringAlongParser(raw);
+
+			//multitool rawData = r.rafRead("pt");
+			//dbm.load_Into_SQL(rawData, ssp);
+
+			//ssp.sqlCMD = "SELECT TOP(1)";
+			//dbm.update_vendor(ssp, sample.get_sample_vendor());
+
+			//parse.parser(rawData);
 		}
 	}
 }
