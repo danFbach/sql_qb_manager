@@ -227,7 +227,7 @@ namespace RAF_to_SQL
 			public string vendata = @"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\NVEND.DAT";
 
 			public int partLen = 137; //roughly...
-			public List<int> sendPartSpec = new List<int> { 6, 50, 6, 50, 3, 8, 2, 6, 7, 8, 8, 8, 5, 10, 10, 10, 10, 8, 6, 8, 8, 6, 6, 8, 8, 8, 6, 4, 8, 8, 3, 6, 6, 6, 6, 50, 4, 4 };
+			public List<int> txPartSpec = new List<int> { 6, 50, 6, 50, 8, 2, 6, 7, 8, 8, 8, 5, 10, 10, 10, 10, 8, 6, 8, 8, 6, 6, 8, 8, 8, 6, 4, 8, 8, 3, 6, 6, 6, 6, 50, 4, 4 };
 			public List<int> part = new List<int> { 0, 6, 20, 24, 2, 4, 2, 6, 4, 2, 4, 4, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 4, 4, 2, 2, 2, 4, 2, 4, 2, 2, 2, 1, 2, 2, 0 };
 			public string partdata = @"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\INVEN.DAT";
 
@@ -235,6 +235,28 @@ namespace RAF_to_SQL
 			public List<int> productSendSpec = new List<int> { 5, 50, 10, 10, 10, 10, 6, 6, 6, 6, 6, 10, 4 };
 			public List<int> product = new List<int> { 6, 24, 6, 12, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 };
 			public string prodata = @"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\inven.dat";
+
+			public string sendbackpath = @"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\fromDB.txt";
+			public List<string> response = new List<string>( );
+			public string abc = "abcdefghijklmnopqrstuvwxyz";
+		}
+		public class dbConfig
+		{
+			public string inven_general_conn = @"Data Source=DANDELL\MSSQLSERVER01;Initial Catalog=Inven_SQL;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+			public string vendorTable = "vendor";
+			public int vendorColCount = 21;
+			public string partVendorRelatTable = "part_vendor_relational";
+			public int partVendorColCount = 3;
+			public string productTable = "Products";
+			public int productColCount = 14;
+			public string prodReqdPartTable = "reqd_part";
+			public int prodReqdPartColCount = 4;
+			public string partTable = "Parts";
+			public int partColCount = 38;
+			public string stringAlongPartTable = "string_along_part";
+			public int stringAlongPartColCount = 4;
+			public string stringAlongTable = "string_along";
+			public int stringAlongColCount = 3;
 		}
 	}
 }

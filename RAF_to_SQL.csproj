@@ -7,7 +7,7 @@
     <ProjectGuid>{AEC464AC-C2A9-4E2D-84A7-DD1DA7307623}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>RAF_to_SQL</RootNamespace>
-    <AssemblyName>RAF_to_SQL</AssemblyName>
+    <AssemblyName>w</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -54,6 +54,9 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>SQL.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -64,6 +67,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\mainSwitch.cs" />
+    <Compile Include="utility.cs" />
     <Compile Include="datasets.cs" />
     <Compile Include="dataSwitches.cs" />
     <Compile Include="dbConfig.cs" />
@@ -95,12 +100,16 @@
   <ItemGroup>
     <Content Include="data\PARTDATA.TXT" />
     <Content Include="data\PRODDATA.TXT" />
+    <Content Include="data\sampleData.txt" />
     <Content Include="data\STRLDATA.TXT" />
     <Content Include="data\fromDB.txt" />
+    <Content Include="data\toDB.txt" />
+    <Content Include="SQL.ico" />
     <Content Include="sqlModels\dbo.Table.sql" />
     <Content Include="sqlModels\dbo.Table_1.sql" />
     <Content Include="sqlModels\dbo.Table_2.sql" />
     <Content Include="sqlModels\dbo.Table_3.sql" />
+    <Content Include="s_orange.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

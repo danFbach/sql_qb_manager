@@ -138,7 +138,7 @@ namespace RAF_to_SQL
 						param.Value = id;
 						continue;
 					case "Product_Number":
-						param.Value = product.Product_Number.Trim();
+						param.Value = product.Product_Number.Trim( );
 						continue;
 					case "Description":
 						param.Value = product.Description;
@@ -427,7 +427,7 @@ namespace RAF_to_SQL
 			}
 			return p;
 		}
-		public SqlCommand partSqlParamSwitch(SqlCommand command, partFieldImport part, int id)
+		public SqlCommand partSqlImportSwitch(SqlCommand command, partFieldImport part, int id)
 		{
 			DateTime _base = DateTime.Parse("1/1/1988");
 			foreach(SqlParameter param in command.Parameters)
@@ -603,6 +603,411 @@ namespace RAF_to_SQL
 			}
 			return command;
 		}
+
+		public SqlCommand partSwitchToSQLInsert(SqlCommand command, partField part)
+		{
+			DateTime _base = DateTime.Parse("1/1/1988");
+			foreach(SqlParameter param in command.Parameters)
+			{
+				string xyz = param.ParameterName.Replace('@', ' ').Trim( );
+				switch(xyz)
+				{
+					case "part_number":
+						param.Value = part.part_name.Substring(2, 4);
+						continue;
+					case "part_name":
+						if(part.part_name == null) { param.Value = ""; }
+						else { param.Value = part.part_name; }
+						continue;
+					case "description":
+						if(part.description == null)
+						{
+							param.Value = "";
+						}
+						else
+						{
+							param.Value = part.description;
+						}
+						continue;
+					case "specification":
+						param.Value = part.specification;
+						continue;
+					case "special_instruction":
+						param.Value = part.special_instruction;
+						continue;
+					case "years_use":
+						param.Value = part.years_use;
+						continue;
+					case "lead_time_in_weeks":
+						param.Value = part.lead_time_in_weeks;
+						continue;
+					case "listed_vendor_id":
+						if(part.listed_vendor_id == null)
+						{
+							param.Value = "";
+						}
+						else { param.Value = part.listed_vendor_id; }
+						continue;
+					case "best_quantity_to_order":
+						param.Value = part.best_quantity_to_order;
+						continue;
+					case "finished_weight":
+						param.Value = part.finished_weight;
+						continue;
+					case "price":
+						param.Value = part.price;
+						continue;
+					case "quantity_on_order":
+						param.Value = part.quantity_on_order;
+						continue;
+					case "listed_PO_num":
+						param.Value = part.listed_PO_num;
+						continue;
+					case "delivery_date_1":
+						param.Value = part.delivery_date_1;
+						continue;
+					case "delivery_date_2":
+						param.Value = part.delivery_date_2;
+						continue;
+					case "delivery_date_3":
+						param.Value = part.delivery_date_3;
+						continue;
+					case "delivery_date_4":
+						param.Value = part.delivery_date_4;
+						continue;
+					case "added_cost":
+						param.Value = part.added_cost;
+						continue;
+					case "cycle_time_secs_second_machine":
+						param.Value = part.cycle_time_secs_second_machine;
+						continue;
+					case "added_cost_machine_2":
+						param.Value = part.added_cost_machine_2;
+						continue;
+					case "quantity_on_hand":
+						param.Value = part.quantity_on_hand;
+						continue;
+					case "raw_material_number":
+						param.Value = part.raw_material_number;
+						continue;
+					case "material_weight":
+						param.Value = part.material_weight;
+						continue;
+					case "ytd_sales":
+						param.Value = part.ytd_sales;
+						continue;
+					case "latest_quote":
+						param.Value = part.latest_quote;
+						continue;
+					case "quantity_assembled":
+						param.Value = part.quantity_assembled;
+						continue;
+					case "cycle_time":
+						param.Value = part.cycle_time;
+						continue;
+					case "machine_num":
+						param.Value = part.machine_num;
+						continue;
+					case "machine_rate":
+						param.Value = part.machine_rate;
+						continue;
+					case "last_years_use":
+						param.Value = part.last_years_use;
+						continue;
+					case "weeks_cushion":
+						param.Value = part.weeks_cushion;
+						continue;
+					case "allocated":
+						param.Value = part.allocated;
+						continue;
+					case "setup_time":
+						param.Value = part.setup_time;
+						continue;
+					case "raw_material_2":
+						param.Value = part.raw_material_2;
+						continue;
+					case "list_price":
+						param.Value = part.list_price;
+						continue;
+					case "memo":
+						if(part.memo == null) { param.Value = ""; }
+						else { param.Value = part.memo; }
+						continue;
+					case "picture_path":
+						param.Value = part.picture_path;
+						continue;
+					case "drawing_path":
+						param.Value = part.drawing_path;
+						continue;
+				}
+			}
+			return command;
+		}
+		public SqlCommand partSwitchToSQLUpdate(SqlCommand command, partField part, int id, object[] original_parameters)
+		{
+			DateTime _base = DateTime.Parse("1/1/1988");
+			foreach(SqlParameter param in command.Parameters)
+			{
+				string xyz = param.ParameterName.Replace('@', ' ').Trim();
+				switch(xyz)
+				{
+					case "part_number":
+						param.Value = part.part_name.Substring(2, 4);
+						//param.Value = part.part_number;
+						continue;
+					case "part_name":
+						if(part.part_name == null)
+						{
+							param.Value = "";
+						}
+						else
+						{
+							param.Value = part.part_name;
+						}
+						continue;
+					case "description":
+						if(part.description == null)
+						{
+							param.Value = "";
+						}
+						else
+						{
+							param.Value = part.description;
+						}
+						continue;
+					case "specification":
+						param.Value = part.specification;
+						continue;
+					case "special_instruction":
+						param.Value = part.special_instruction;
+						continue;
+					case "years_use":
+						param.Value = part.years_use;
+						continue;
+					case "lead_time_in_weeks":
+						param.Value = part.lead_time_in_weeks;
+						continue;
+					case "listed_vendor_id":
+						if(part.listed_vendor_id == null)
+						{
+							param.Value = "";
+						}
+						else { param.Value = part.listed_vendor_id; }
+						continue;
+					case "best_quantity_to_order":
+						param.Value = part.best_quantity_to_order;
+						continue;
+					case "finished_weight":
+						param.Value = part.finished_weight;
+						continue;
+					case "price":
+						param.Value = part.price;
+						continue;
+					case "quantity_on_order":
+						param.Value = part.quantity_on_order;
+						continue;
+					case "listed_PO_num":
+						param.Value = part.listed_PO_num;
+						continue;
+					case "delivery_date_1":
+						param.Value = part.delivery_date_1;
+						continue;
+					case "delivery_date_2":
+						param.Value = part.delivery_date_2;
+						continue;
+					case "delivery_date_3":
+						param.Value = part.delivery_date_3;
+						continue;
+					case "delivery_date_4":
+						param.Value = part.delivery_date_4;
+						continue;
+					case "added_cost":
+						param.Value = part.added_cost;
+						continue;
+					case "cycle_time_secs_second_machine":
+						param.Value = part.cycle_time_secs_second_machine;
+						continue;
+					case "added_cost_machine_2":
+						param.Value = part.added_cost_machine_2;
+						continue;
+					case "quantity_on_hand":
+						param.Value = part.quantity_on_hand;
+						continue;
+					case "raw_material_number":
+						param.Value = part.raw_material_number;
+						continue;
+					case "material_weight":
+						param.Value = part.material_weight;
+						continue;
+					case "ytd_sales":
+						param.Value = part.ytd_sales;
+						continue;
+					case "latest_quote":
+						param.Value = part.latest_quote;
+						continue;
+					case "quantity_assembled":
+						param.Value = part.quantity_assembled;
+						continue;
+					case "cycle_time":
+						param.Value = part.cycle_time;
+						continue;
+					case "machine_num":
+						param.Value = part.machine_num;
+						continue;
+					case "machine_rate":
+						param.Value = part.machine_rate;
+						continue;
+					case "last_years_use":
+						param.Value = part.last_years_use;
+						continue;
+					case "weeks_cushion":
+						param.Value = part.weeks_cushion;
+						continue;
+					case "allocated":
+						param.Value = part.allocated;
+						continue;
+					case "setup_time":
+						param.Value = part.setup_time;
+						continue;
+					case "raw_material_2":
+						param.Value = part.raw_material_2;
+						continue;
+					case "list_price":
+						param.Value = part.list_price;
+						continue;
+					case "memo":
+						if(part.memo == null) { param.Value = ""; }
+						else { param.Value = part.memo; }
+						continue;
+					case "picture_path":
+						param.Value = part.picture_path;
+						continue;
+					case "drawing_path":
+						param.Value = part.drawing_path;
+						continue;
+					case "Original_Id":
+						param.Value = original_parameters[0];
+						continue;
+					case "Original_part_number":
+						param.Value = original_parameters[1];
+						//param.Value = part.part_number;
+						continue;
+					case "Original_part_name":
+							param.Value = original_parameters[2];
+						continue;
+					case "Original_description":
+							param.Value = original_parameters[3];
+						continue;
+					case "Original_specification":
+						param.Value = original_parameters[4];
+						continue;
+					case "Original_special_instruction":
+						param.Value = original_parameters[5];
+						continue;
+					case "Original_years_use":
+						param.Value = original_parameters[6];
+						continue;
+					case "Original_lead_time_in_weeks":
+						param.Value = original_parameters[7];
+						continue;
+					case "Original_listed_vendor_id":
+						param.Value = original_parameters[8];
+						continue;
+					case "Original_best_quantity_to_order":
+						param.Value = original_parameters[9];
+						continue;
+					case "Original_finished_weight":
+						param.Value = original_parameters[10];
+						continue;
+					case "Original_price":
+						param.Value = original_parameters[11];
+						continue;
+					case "Original_quantity_on_order":
+						param.Value = original_parameters[12];
+						continue;
+					case "Original_listed_PO_num":
+						param.Value = original_parameters[13];
+						continue;
+					case "Original_delivery_date_1":
+						param.Value = original_parameters[14];
+						continue;
+					case "Original_delivery_date_2":
+						param.Value = original_parameters[15];
+						continue;
+					case "Original_delivery_date_3":
+						param.Value = original_parameters[16];
+						continue;
+					case "Original_delivery_date_4":
+						param.Value = original_parameters[17];
+						continue;
+					case "Original_added_cost":
+						param.Value = original_parameters[18];
+						continue;
+					case "Original_cycle_time_secs_second_machine":
+						param.Value = original_parameters[19];
+						continue;
+					case "Original_added_cost_machine_2":
+						param.Value = original_parameters[20];
+						continue;
+					case "Original_quantity_on_hand":
+						param.Value = original_parameters[21];
+						continue;
+					case "Original_raw_material_number":
+						param.Value = original_parameters[22];
+						continue;
+					case "Original_material_weight":
+						param.Value = original_parameters[23];
+						continue;
+					case "Original_ytd_sales":
+						param.Value = original_parameters[24];
+						continue;
+					case "Original_latest_quote":
+						param.Value = original_parameters[25];
+						continue;
+					case "Original_quantity_assembled":
+						param.Value = original_parameters[26];
+						continue;
+					case "Original_cycle_time":
+						param.Value = original_parameters[27];
+						continue;
+					case "Original_machine_num":
+						param.Value = original_parameters[28];
+						continue;
+					case "Original_machine_rate":
+						param.Value = original_parameters[29];
+						continue;
+					case "Original_last_years_use":
+						param.Value = original_parameters[30];
+						continue;
+					case "Original_weeks_cushion":
+						param.Value = original_parameters[31];
+						continue;
+					case "Original_allocated":
+						param.Value = original_parameters[32];
+						continue;
+					case "Original_setup_time":
+						param.Value = original_parameters[33];
+						continue;
+					case "Original_raw_material_2":
+						param.Value = original_parameters[34];
+						continue;
+					case "Original_list_price":
+						param.Value = original_parameters[35];
+						continue;
+					case "Original_memo":
+						param.Value = original_parameters[36];
+						continue;
+					case "Original_picture_path":
+						param.Value = original_parameters[37];
+						continue;
+					case "Original_drawing_path":
+						param.Value = original_parameters[38];
+						continue;
+				}
+			}
+			return command;
+		}
+
 		public partField partSwitch(int i, object _rawData, partField p)
 		{
 			if(_rawData.ToString( ).Trim( ) == "") { return p; }
@@ -613,6 +1018,127 @@ namespace RAF_to_SQL
 					return p;
 				case 0:
 					p.part_name = _rawData.ToString( );
+					return p;
+				case 1:
+					p.description = _rawData.ToString( );
+					return p;
+				case 2:
+					if(int.TryParse(_rawData.ToString( ), out int x0)) { p.specification = x0; }
+					return p;
+				case 3:
+					if(int.TryParse(_rawData.ToString( ), out int x1)) { p.special_instruction = x1; }
+					return p;
+				case 4:
+					if(int.TryParse(_rawData.ToString( ), out int x2)) { p.years_use = x2; }
+					return p;
+				case 5:
+					if(int.TryParse(_rawData.ToString( ), out int x3)) { p.lead_time_in_weeks = x3; }
+					return p;
+				case 6:
+					p.listed_vendor_id = _rawData.ToString( );
+					return p;
+				case 7:
+					if(int.TryParse(_rawData.ToString( ), out int x4)) { p.best_quantity_to_order = x4; }
+					return p;
+				case 8:
+					if(int.TryParse(_rawData.ToString( ), out int x5)) { p.finished_weight = x5; }
+					return p;
+				case 9:
+					if(decimal.TryParse(_rawData.ToString( ), out decimal x6)) { p.price = x6; }
+					return p;
+				case 10:
+					if(int.TryParse(_rawData.ToString( ), out int x7)) { p.quantity_on_order = x7; }
+					return p;
+				case 11:
+					if(int.TryParse(_rawData.ToString( ), out int x28)) { p.listed_PO_num = x28; }
+					return p;
+				case 12:
+					if(DateTime.TryParse(_rawData.ToString( ), out DateTime dt0)) { p.delivery_date_1 = dt0; }
+					return p;
+				case 13:
+					if(DateTime.TryParse(_rawData.ToString( ), out DateTime dt1)) { p.delivery_date_2 = dt1; }
+					return p;
+				case 14:
+					if(DateTime.TryParse(_rawData.ToString( ), out DateTime dt2)) { p.delivery_date_3 = dt2; }
+					return p;
+				case 15:
+					if(DateTime.TryParse(_rawData.ToString( ), out DateTime dt3)) { p.delivery_date_4 = dt3; }
+					return p;
+				case 16:
+					if(decimal.TryParse(_rawData.ToString( ), out decimal x8)) { p.added_cost = x8; }
+					return p;
+				case 17:
+					if(int.TryParse(_rawData.ToString( ), out int x9)) { p.cycle_time_secs_second_machine = x9; }
+					return p;
+				case 18:
+					if(decimal.TryParse(_rawData.ToString( ), out decimal x10)) { p.added_cost_machine_2 = x10; }
+					return p;
+				case 19:
+					if(int.TryParse(_rawData.ToString( ), out int x11)) { p.quantity_on_hand = x11; }
+					return p;
+				case 20:
+					if(int.TryParse(_rawData.ToString( ), out int x27)) { p.raw_material_number = x27; }
+					return p;
+				case 21:
+					if(decimal.TryParse(_rawData.ToString( ), out decimal x12)) { p.material_weight = x12; }
+					return p;
+				case 22:
+					if(int.TryParse(_rawData.ToString( ), out int x13)) { p.ytd_sales = x13; }
+					return p;
+				case 23:
+					if(decimal.TryParse(_rawData.ToString( ), out decimal x14)) { p.latest_quote = x14; }
+					return p;
+				case 24:
+					if(int.TryParse(_rawData.ToString( ), out int x15)) { p.quantity_assembled = x15; }
+					return p;
+				case 25:
+					if(int.TryParse(_rawData.ToString( ), out int x21)) { p.cycle_time = x21; }
+					return p;
+				case 26:
+					if(int.TryParse(_rawData.ToString( ), out int x22)) { p.machine_num = x22; }
+					return p;
+				case 27:
+					if(decimal.TryParse(_rawData.ToString( ), out decimal xx24)) { p.machine_rate = xx24; }
+					return p;
+				case 28:
+					if(int.TryParse(_rawData.ToString( ), out int x18)) { p.last_years_use = x18; }
+					return p;
+				case 29:
+					if(int.TryParse(_rawData.ToString( ), out int x19)) { p.weeks_cushion = x19; }
+					return p;
+				case 30:
+					if(int.TryParse(_rawData.ToString( ), out int x17)) { p.allocated = x17; }
+					return p;
+				case 31:
+					if(int.TryParse(_rawData.ToString( ), out int x20)) { p.setup_time = x20; }
+					return p;
+				case 32:
+					if(int.TryParse(_rawData.ToString( ), out int x23)) { p.raw_material_2 = x23; }
+					return p;
+				case 33:
+					if(decimal.TryParse(_rawData.ToString( ), out decimal x24)) { p.list_price = x24; }
+					return p;
+				case 34:
+					p.memo = _rawData.ToString( );
+					return p;
+				case 35:
+					if(int.TryParse(_rawData.ToString( ), out int x26)) { p.picture_path = x26; }
+					return p;
+				case 36:
+					if(int.TryParse(_rawData.ToString( ), out int x25)) { p.drawing_path = x25; }
+					return p;
+				default:
+					return p;
+			}
+		}
+		public partField partSwitchFromQB(int i, object _rawData, partField p)
+		{
+			if(_rawData.ToString( ).Trim( ) == "") { return p; }
+			switch(i)
+			{
+				case 0:
+					p.part_name = _rawData.ToString( );
+					if(int.TryParse(_rawData.ToString( ).Substring(2, 4), out int partnum)) { p.part_number = partnum; }
 					return p;
 				case 1:
 					p.description = _rawData.ToString( );
