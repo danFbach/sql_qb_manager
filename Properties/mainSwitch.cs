@@ -1,10 +1,6 @@
-﻿using System;
+﻿using System.Data.SqlClient;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static RAF_to_SQL.datasets;
-using System.Data.SqlClient;
 
 namespace RAF_to_SQL
 {
@@ -38,7 +34,7 @@ namespace RAF_to_SQL
 									ssp.tableName = "Inven_SQL.dbo.Products";
 									ssp.searchVal = prodQ.ToString( );
 									ssp.searchKey = "Product_Number";
-									ssp.sqlCMD = "SELECT * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
+									ssp.SQLcmd = "SELECT * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
 									send = dbm.selectQuery(ssp);
 									if(send != null)
 									{
@@ -56,7 +52,7 @@ namespace RAF_to_SQL
 									ssp.tableName = "Inven_SQL.dbo.Parts";
 									ssp.searchVal = partQ.ToString( );
 									ssp.searchKey = "part_number";
-									ssp.sqlCMD = "SELECT * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
+									ssp.SQLcmd = "SELECT * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
 									send = dbm.selectQuery(ssp);
 									if(send != null)
 									{
@@ -72,7 +68,7 @@ namespace RAF_to_SQL
 								//for search by first letter of vcode
 								ssp.searchKey = "v_code";
 								ssp.searchVal = _args[2] + "%";
-								ssp.sqlCMD = "SELECT * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " LIKE '" + ssp.searchVal + "'";
+								ssp.SQLcmd = "SELECT * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " LIKE '" + ssp.searchVal + "'";
 								spec.response = dbm.query_vendor(ssp);
 							}
 							else if(int.TryParse(_args[2], out int idQuery))
@@ -80,7 +76,7 @@ namespace RAF_to_SQL
 								ssp.tableName = "Inven_SQL.dbo.vendor";
 								ssp.searchVal = idQuery.ToString( );
 								ssp.searchKey = "Id";
-								ssp.sqlCMD = "SELECT * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
+								ssp.SQLcmd = "SELECT * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
 								send = dbm.selectQuery(ssp);
 							}
 							else if(_args[2].Length > 1)
@@ -88,7 +84,7 @@ namespace RAF_to_SQL
 								//searching by vendor code
 								ssp.searchKey = "v_code";
 								ssp.searchVal = _args[2];
-								ssp.sqlCMD = "SELECT * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = '" + ssp.searchVal + "'";
+								ssp.SQLcmd = "SELECT * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = '" + ssp.searchVal + "'";
 								spec.response = dbm.query_vendor(ssp);
 							}
 							if(spec.response.Count == 1)
@@ -107,24 +103,17 @@ namespace RAF_to_SQL
 						switch(_args[1])
 						{
 							case "-pr":
-								ssp.searchKey = "Product_Number";
-								ssp.tableName = "Inven_SQL.dbo.Products";
-								ssp.sqlCMD = "SELECT TOP(1) * FROM " + ssp.tableName;
-								dbm.insert_part(ssp, toDB[0]);
+								ssp.searchKey = "Product_Number"; ssp.tableName = "Inven_SQL.dbo.Products"; ssp.SQLcmd = "SELECT TOP(1) * FROM " + ssp.tableName;
+								dbm.insert_product(ssp, toDB[0]);
 								break;
 							case "-pt":
-								ssp.searchKey = "part_number";
-								ssp.tableName = "Inven_SQL.dbo.Parts";
-								ssp.sqlCMD = "SELECT TOP(1) * FROM " + ssp.tableName;
+								ssp.searchKey = "part_number"; ssp.tableName = "Inven_SQL.dbo.Parts"; ssp.SQLcmd = "SELECT TOP(1) * FROM " + ssp.tableName;
 								dbm.insert_part(ssp, toDB[0]);
 								break;
 							case "-v":
-								ssp.searchKey = "1";
-								ssp.tableName = "Inven_SQL.dbo.vendor";
-								ssp.sqlCMD = "SELECT TOP(1) * FROM " + ssp.tableName;
-								dbm.insert_part(ssp, toDB[0]);
+								ssp.searchKey = "1"; ssp.tableName = "Inven_SQL.dbo.vendor"; ssp.SQLcmd = "SELECT TOP(1) * FROM " + ssp.tableName;
+								dbm.insert_vendor(ssp, toDB[0]);
 								break;
-
 						}
 					}
 					break;
@@ -136,6 +125,13 @@ namespace RAF_to_SQL
 						switch(_args[1])
 						{
 							case "-pr":
+								//if(int.TryParse(_args[2], out int Uprod))
+								//{
+								//	ssp.searchVal = (Uprod += 90000).ToString( );
+								//	ssp.searchKey = "Product_Number";
+								//	ssp.tableName = "Inven_SQL.dbo.Products";
+								//	dbm.update_product(ssp, toDB[0]);
+								//}
 								break;
 							case "-pt":
 								if(int.TryParse(_args[2], out int Upart))
@@ -147,6 +143,11 @@ namespace RAF_to_SQL
 								}
 								break;
 							case "-v":
+								if(int.TryParse(_args[2], out int Uvend))
+								{
+									ssp.searchVal = (Uvend).ToString( ); ssp.searchKey = "Id"; ssp.tableName = "Inven_SQL.dbo.vendor";
+									dbm.update_vendor(ssp, toDB[0]);
+								}
 								break;
 						}
 					}
@@ -160,7 +161,7 @@ namespace RAF_to_SQL
 								ssp.searchVal = (Dprod += 90000).ToString( );
 								ssp.tableName = "Inven_SQL.dbo.Products";
 								ssp.searchKey = "product_number";
-								ssp.sqlCMD = "DELETE FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
+								ssp.SQLcmd = "DELETE FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
 								dbm.delete_row(ssp);
 							}
 							break;
@@ -170,7 +171,7 @@ namespace RAF_to_SQL
 								ssp.searchVal = (Dpart += 1000).ToString( );
 								ssp.tableName = "Inven_SQL.dbo.Parts";
 								ssp.searchKey = "part_number";
-								ssp.sqlCMD = "DELETE FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
+								ssp.SQLcmd = "DELETE FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
 								dbm.delete_row(ssp);
 							}
 							break;
@@ -180,7 +181,7 @@ namespace RAF_to_SQL
 								ssp.searchVal = (Dvend).ToString( );
 								ssp.tableName = "Inven_SQL.dbo.vendor";
 								ssp.searchKey = "Id";
-								ssp.sqlCMD = "DELETE FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
+								ssp.SQLcmd = "DELETE FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
 								dbm.delete_row(ssp);
 							}
 							break;

@@ -17,7 +17,7 @@ namespace RAF_to_SQL
 		{
 			public string searchKey { get; set; }
 			public string searchVal { get; set; }
-			public string sqlCMD { get; set; }
+			public string SQLcmd { get; set; }
 			public string tableName { get; set; }
 			public SqlConnection db_connector { get; set; }
 		}
@@ -222,17 +222,17 @@ namespace RAF_to_SQL
 		public class fileSpec
 		{
 			public int vendorLen = 574;
-			public List<int> vendorSendSpec = new List<int> { 4, 6, 35, 24, 24, 30, 20, 4, 30, 45, 45, 20, 30, 45, 20, 30, 45, 20, 30, 45, 20 };
+			public List<int> vendorTxSpec = new List<int> { 4, 6, 35, 24, 24, 30, 20, 4, 30, 45, 45, 20, 30, 45, 20, 30, 45, 20, 30, 45, 20 };
 			public List<int> vendor = new List<int> { 0, 6, 35, 24, 24, 30, 20, 4, 30, 45, 45, 20, 30, 45, 20, 30, 45, 20, 30, 45, 20 };
 			public string vendata = @"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\NVEND.DAT";
 
 			public int partLen = 137; //roughly...
-			public List<int> txPartSpec = new List<int> { 6, 50, 6, 50, 8, 2, 6, 7, 8, 8, 8, 5, 10, 10, 10, 10, 8, 6, 8, 8, 6, 6, 8, 8, 8, 6, 4, 8, 8, 3, 6, 6, 6, 6, 50, 4, 4 };
+			public List<int> partTxSpec = new List<int> { 6, 50, 6, 50, 8, 2, 6, 7, 8, 8, 8, 5, 10, 10, 10, 10, 8, 6, 8, 8, 6, 6, 8, 8, 8, 6, 4, 8, 8, 3, 6, 6, 6, 6, 50, 4, 4 };
 			public List<int> part = new List<int> { 0, 6, 20, 24, 2, 4, 2, 6, 4, 2, 4, 4, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 4, 4, 2, 2, 2, 4, 2, 4, 2, 2, 2, 1, 2, 2, 0 };
 			public string partdata = @"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\INVEN.DAT";
 
 			public int prodLen = 82; //roughly..
-			public List<int> productSendSpec = new List<int> { 5, 50, 10, 10, 10, 10, 6, 6, 6, 6, 6, 10, 4 };
+			public List<int> productTxSpec = new List<int> { 5, 50, 10, 10, 10, 10, 6, 6, 6, 6, 6, 10, 4 };
 			public List<int> product = new List<int> { 6, 24, 6, 12, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 };
 			public string prodata = @"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\inven.dat";
 

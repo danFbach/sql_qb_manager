@@ -1,6 +1,7 @@
-﻿using System;
+﻿using System.IO;
 using System.Collections.Generic;
-using System.IO;
+using System.Data.SqlClient;
+using static RAF_to_SQL.datasets;
 
 namespace RAF_to_SQL
 {
@@ -50,6 +51,17 @@ namespace RAF_to_SQL
 					sw.WriteLine(address);
 				}
 			}
+		}
+		public sqlParameters getSSP(string searchKey, string searchVal, string SQLcmd, string tableName, SqlConnection db_connector)
+		{
+			dbConfig db = new dbConfig( );
+			sqlParameters ssp = new sqlParameters( );
+			ssp.db_connector = new SqlConnection(db.inven_general_conn);
+			ssp.tableName = tableName;
+			ssp.SQLcmd = SQLcmd;
+			ssp.searchKey = searchKey;
+			ssp.searchVal = searchVal;
+			return ssp;
 		}
 	}
 }

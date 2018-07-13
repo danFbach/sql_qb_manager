@@ -7,8 +7,8 @@ using static RAF_to_SQL.datasets;
 namespace RAF_to_SQL
 {
 	class dataSwitches
-	{
-		dbConfig dbconfig = new dbConfig( );
+	{   dbConfig dbconfig = new dbConfig( );
+		#region vendor switches
 		public string vendorSqlSwitch(string sqlCol, vendorFields v)
 		{
 			switch(sqlCol)
@@ -61,9 +61,12 @@ namespace RAF_to_SQL
 		}
 		public vendorFields vendorSwitch(int i, string rawData, vendorFields v)
 		{
-			if(rawData.Trim( ) == "") { return v; }
+			if(rawData == null) { rawData = ""; }
 			switch(i)
 			{
+				case 0:
+					if(int.TryParse(rawData, out int ID)) { v.id = ID; }
+					return v;
 				case 1:
 					v.v_code = rawData;
 					return v;
@@ -128,6 +131,215 @@ namespace RAF_to_SQL
 					return v;
 			}
 		}
+		public SqlCommand vendorSwitchToSQLInsert(SqlCommand command, vendorFields v)
+		{
+			foreach(SqlParameter param in command.Parameters)
+			{
+				switch(param.SourceColumn)
+				{
+					case "v_code":
+						param.Value = v.v_code;
+						continue;
+					case "business_name":
+						param.Value = v.business_name;
+						continue;
+					case "address_1":
+						param.Value = v.address_1;
+						continue;
+					case "address_2":
+						param.Value = v.address_2;
+						continue;
+					case "city_state_zip":
+						param.Value = v.city_state_zip;
+						continue;
+					case "fax_number":
+						param.Value = v.fax_number;
+						continue;
+					case "terms":
+						param.Value = v.terms;
+						continue;
+					case "order_contact":
+						param.Value = v.order_contact;
+						continue;
+					case "order_email":
+						param.Value = v.order_email;
+						continue;
+					case "order_email_cc":
+						param.Value = v.order_email_cc;
+						continue;
+					case "order_phone":
+						param.Value = v.order_phone;
+						continue;
+					case "account_contact":
+						param.Value = v.account_contact;
+						continue;
+					case "account_email":
+						param.Value = v.account_email;
+						continue;
+					case "account_phone":
+						param.Value = v.account_phone;
+						continue;
+					case "quality_contact":
+						param.Value = v.quality_contact;
+						continue;
+					case "quality_email":
+						param.Value = v.quality_email;
+						continue;
+					case "quality_phone":
+						param.Value = v.quality_phone;
+						continue;
+					case "shipping_contact":
+						param.Value = v.shipping_contact;
+						continue;
+					case "shipping_email":
+						param.Value = v.shipping_email;
+						continue;
+					case "shipping_phone":
+						param.Value = v.shipping_phone;
+						continue;
+				}
+			}
+			return command;
+		}
+		public SqlCommand vendorSwitchToSQLUpdate(SqlCommand command, vendorFields v, object[] originalData)
+		{
+			foreach(SqlParameter param in command.Parameters)
+			{
+				string _switch = param.ParameterName.Replace("@", "");
+				switch(_switch)
+				{
+					case "id":
+						param.Value = v.id;
+						continue;
+					case "v_code":
+						param.Value = v.v_code;
+						continue;
+					case "business_name":
+						param.Value = v.business_name;
+						continue;
+					case "address_1":
+						param.Value = v.address_1;
+						continue;
+					case "address_2":
+						param.Value = v.address_2;
+						continue;
+					case "city_state_zip":
+						param.Value = v.city_state_zip;
+						continue;
+					case "fax_number":
+						param.Value = v.fax_number;
+						continue;
+					case "terms":
+						param.Value = v.terms;
+						continue;
+					case "order_contact":
+						param.Value = v.order_contact;
+						continue;
+					case "order_email":
+						param.Value = v.order_email;
+						continue;
+					case "order_email_cc":
+						param.Value = v.order_email_cc;
+						continue;
+					case "order_phone":
+						param.Value = v.order_phone;
+						continue;
+					case "account_contact":
+						param.Value = v.account_contact;
+						continue;
+					case "account_email":
+						param.Value = v.account_email;
+						continue;
+					case "account_phone":
+						param.Value = v.account_phone;
+						continue;
+					case "quality_contact":
+						param.Value = v.quality_contact;
+						continue;
+					case "quality_email":
+						param.Value = v.quality_email;
+						continue;
+					case "quality_phone":
+						param.Value = v.quality_phone;
+						continue;
+					case "shipping_contact":
+						param.Value = v.shipping_contact;
+						continue;
+					case "shipping_email":
+						param.Value = v.shipping_email;
+						continue;
+					case "shipping_phone":
+						param.Value = v.shipping_phone;
+						continue;
+					case "Original_id":
+						param.Value = originalData[0];
+						continue;
+					case "Original_v_code":
+						param.Value = originalData[1];
+						continue;
+					case "Original_business_name":
+						param.Value = originalData[2];
+						continue;
+					case "Original_address_1":
+						param.Value = originalData[3];
+						continue;
+					case "Original_address_2":
+						param.Value = originalData[4];
+						continue;
+					case "Original_city_state_zip":
+						param.Value = originalData[5];
+						continue;
+					case "Original_fax_number":
+						param.Value = originalData[6];
+						continue;
+					case "Original_terms":
+						param.Value = originalData[7];
+						continue;
+					case "Original_order_contact":
+						param.Value = originalData[8];
+						continue;
+					case "Original_order_email":
+						param.Value = originalData[9];
+						continue;
+					case "Original_order_email_cc":
+						param.Value = originalData[10];
+						continue;
+					case "Original_order_phone":
+						param.Value = originalData[11];
+						continue;
+					case "Original_account_contact":
+						param.Value = originalData[12];
+						continue;
+					case "Original_account_email":
+						param.Value = originalData[13];
+						continue;
+					case "Original_account_phone":
+						param.Value = originalData[14];
+						continue;
+					case "Original_quality_contact":
+						param.Value = originalData[15];
+						continue;
+					case "Original_quality_email":
+						param.Value = originalData[16];
+						continue;
+					case "Original_quality_phone":
+						param.Value = originalData[17];
+						continue;
+					case "Original_shipping_contact":
+						param.Value = originalData[18];
+						continue;
+					case "Original_shipping_email":
+						param.Value = originalData[19];
+						continue;
+					case "Original_shipping_phone":
+						param.Value = originalData[20];
+						continue;
+				}
+			}
+			return command;
+		}
+		#endregion vendor switches
+		#region product switches
 		public SqlCommand productSqlSwitch(SqlCommand command, productField product, int id)
 		{
 			foreach(SqlParameter param in command.Parameters)
@@ -427,6 +639,8 @@ namespace RAF_to_SQL
 			}
 			return p;
 		}
+		#endregion product switches
+		#region part switches
 		public SqlCommand partSqlImportSwitch(SqlCommand command, partFieldImport part, int id)
 		{
 			DateTime _base = DateTime.Parse("1/1/1988");
@@ -748,7 +962,7 @@ namespace RAF_to_SQL
 			DateTime _base = DateTime.Parse("1/1/1988");
 			foreach(SqlParameter param in command.Parameters)
 			{
-				string xyz = param.ParameterName.Replace('@', ' ').Trim();
+				string xyz = param.ParameterName.Replace('@', ' ').Trim( );
 				switch(xyz)
 				{
 					case "part_number":
@@ -893,10 +1107,10 @@ namespace RAF_to_SQL
 						//param.Value = part.part_number;
 						continue;
 					case "Original_part_name":
-							param.Value = original_parameters[2];
+						param.Value = original_parameters[2];
 						continue;
 					case "Original_description":
-							param.Value = original_parameters[3];
+						param.Value = original_parameters[3];
 						continue;
 					case "Original_specification":
 						param.Value = original_parameters[4];
@@ -1375,5 +1589,6 @@ namespace RAF_to_SQL
 					return p;
 			}
 		}
+		#endregion part switches
 	}
 }
