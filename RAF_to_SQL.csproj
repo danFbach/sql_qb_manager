@@ -8,9 +8,9 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>RAF_to_SQL</RootNamespace>
     <AssemblyName>w</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -71,7 +71,6 @@
     <Compile Include="utility.cs" />
     <Compile Include="datasets.cs" />
     <Compile Include="dataSwitches.cs" />
-    <Compile Include="dbConfig.cs" />
     <Compile Include="db_manager.cs" />
     <Compile Include="Parse.cs" />
     <Compile Include="Program.cs" />
@@ -84,6 +83,7 @@
     <None Include="data\inven.dat" />
     <None Include="data\NVEND.DAT" />
     <None Include="data\PARTS.DAT" />
+    <None Include="data\PRODUCTS.BAK" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.1">

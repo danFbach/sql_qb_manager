@@ -340,7 +340,7 @@ namespace RAF_to_SQL
 		}
 		#endregion vendor switches
 		#region product switches
-		public SqlCommand productSqlSwitch(SqlCommand command, productField product, int id)
+		public SqlCommand productSqlSwitchInsert(SqlCommand command, productField product, int id)
 		{
 			foreach(SqlParameter param in command.Parameters)
 			{
@@ -387,6 +387,101 @@ namespace RAF_to_SQL
 						continue;
 					case "product_code":
 						param.Value = product.product_code;
+						continue;
+				}
+			}
+			return command;
+		}
+		public SqlCommand productSqlSwitchUpdate(SqlCommand command, productField product, int id, object[] original_parameters)
+		{
+			foreach(SqlParameter param in command.Parameters)
+			{
+			string _param = param.ParameterName.Replace("@","");
+				switch(_param)
+				{
+					case "Id":
+						param.Value = id;
+						continue;
+					case "Product_Number":
+						param.Value = product.Product_Number.Trim( );
+						continue;
+					case "Description":
+						param.Value = product.Description;
+						continue;
+					case "Price":
+						param.Value = product.Price;
+						continue;
+					case "Weight":
+						param.Value = product.Weight;
+						continue;
+					case "Master_Units":
+						param.Value = product.Master_Units;
+						continue;
+					case "Cubic_Feet":
+						param.Value = product.Cubic_Feet;
+						continue;
+					case "quantity_on_hand":
+						param.Value = product.quantity_on_hand;
+						continue;
+					case "annual_use":
+						param.Value = product.annual_use;
+						continue;
+					case "sales_last_period":
+						param.Value = product.sales_last_period;
+						continue;
+					case "ytd_sales":
+						param.Value = product.ytd_sales;
+						continue;
+					case "gross":
+						param.Value = product.gross;
+						continue;
+					case "assembly_time_secs":
+						param.Value = product.assembly_time_secs;
+						continue;
+					case "product_code":
+						param.Value = product.product_code;
+						continue;
+					case "Original_Id":
+						param.Value = original_parameters[0];
+						continue;
+					case "Original_Product_Number":
+						param.Value = original_parameters[1];
+						continue;
+					case "Original_Description":
+						param.Value = original_parameters[2];
+						continue;
+					case "Original_Price":
+						param.Value = original_parameters[3];
+						continue;
+					case "Original_Weight":
+						param.Value = original_parameters[4];
+						continue;
+					case "Original_Master_Units":
+						param.Value = original_parameters[5];
+						continue;
+					case "Original_Cubic_Feet":
+						param.Value = original_parameters[6];
+						continue;
+					case "Original_quantity_on_hand":
+						param.Value = original_parameters[7];
+						continue;
+					case "Original_annual_use":
+						param.Value = original_parameters[8];
+						continue;
+					case "Original_sales_last_period":
+						param.Value = original_parameters[9];
+						continue;
+					case "Original_ytd_sales":
+						param.Value = original_parameters[10];
+						continue;
+					case "Original_gross":
+						param.Value = original_parameters[11];
+						continue;
+					case "Original_assembly_time_secs":
+						param.Value = original_parameters[12];
+						continue;
+					case "Original_product_code":
+						param.Value = original_parameters[13];
 						continue;
 				}
 			}
@@ -962,8 +1057,8 @@ namespace RAF_to_SQL
 			DateTime _base = DateTime.Parse("1/1/1988");
 			foreach(SqlParameter param in command.Parameters)
 			{
-				string xyz = param.ParameterName.Replace('@', ' ').Trim( );
-				switch(xyz)
+				string _param = param.ParameterName.Replace("@","");
+				switch(_param)
 				{
 					case "part_number":
 						param.Value = part.part_name.Substring(2, 4);

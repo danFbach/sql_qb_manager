@@ -1,4 +1,6 @@
-﻿using System.Data.SqlClient;
+﻿using System.Net;
+using System.Security;
+using System.Data.SqlClient;
 using System.Collections.Generic;
 using static RAF_to_SQL.datasets;
 
@@ -19,7 +21,9 @@ namespace RAF_to_SQL
 		{
 			ssp.db_connector = new SqlConnection( );
 			ssp.db_connector.ConnectionString = db.inven_general_conn;
-			string send;
+			//SecureString secure = new SqlCredential("PublicSQLLogin", "LPI-1958");
+			//ssp.db_connector.Credential = new SqlCredential(secure.,secure);
+			string send = "";
 			switch(_args[0])
 			{
 				case "-q":
@@ -36,10 +40,7 @@ namespace RAF_to_SQL
 									ssp.searchKey = "Product_Number";
 									ssp.SQLcmd = "SELECT * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
 									send = dbm.selectQuery(ssp);
-									if(send != null)
-									{
-										w.lineWrite(send, spec.sendbackpath);
-									}
+									if(send != null) { w.lineWrite(send, spec.sendbackpathLocal); }
 								}
 							}
 							break;
@@ -54,10 +55,7 @@ namespace RAF_to_SQL
 									ssp.searchKey = "part_number";
 									ssp.SQLcmd = "SELECT * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
 									send = dbm.selectQuery(ssp);
-									if(send != null)
-									{
-										w.lineWrite(send, spec.sendbackpath);
-									}
+									if(send != null) { w.lineWrite(send, spec.sendbackpathRemote); }
 								}
 							}
 							break;
@@ -83,15 +81,16 @@ namespace RAF_to_SQL
 							{
 								//searching by vendor code
 								ssp.searchKey = "v_code";
-								ssp.searchVal = _args[2];
+								ssp.searchVal = _args[2].Replace("-","");
 								ssp.SQLcmd = "SELECT * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = '" + ssp.searchVal + "'";
 								spec.response = dbm.query_vendor(ssp);
 							}
-							if(spec.response.Count == 1)
+							if(spec.response.Count == 1 || send.Length > 0)
 							{
-								w.lineWrite(spec.response[0], spec.sendbackpath);
+								string sendData = send ?? spec.response[0];
+								w.lineWrite(sendData, spec.sendbackpathRemote);
 							}
-							else if(spec.response.Count > 1) { w.listWrite(spec.response, spec.sendbackpath); }
+							else if(spec.response.Count > 1) { w.listWrite(spec.response, spec.sendbackpathRemote); }
 							break;
 					}
 					break;
@@ -125,13 +124,13 @@ namespace RAF_to_SQL
 						switch(_args[1])
 						{
 							case "-pr":
-								//if(int.TryParse(_args[2], out int Uprod))
-								//{
-								//	ssp.searchVal = (Uprod += 90000).ToString( );
-								//	ssp.searchKey = "Product_Number";
-								//	ssp.tableName = "Inven_SQL.dbo.Products";
-								//	dbm.update_product(ssp, toDB[0]);
-								//}
+								if(int.TryParse(_args[2], out int Uprod))
+								{
+									ssp.searchVal = (Uprod += 90000).ToString( );
+									ssp.searchKey = "Product_Number";
+									ssp.tableName = "Inven_SQL.dbo.Products";
+									dbm.update_products(ssp, toDB[0]);
+								}
 								break;
 							case "-pt":
 								if(int.TryParse(_args[2], out int Upart))
@@ -143,7 +142,7 @@ namespace RAF_to_SQL
 								}
 								break;
 							case "-v":
-								if(int.TryParse(_args[2], out int Uvend))
+								if(int.TryParse(_args[2].Replace("-",""), out int Uvend))
 								{
 									ssp.searchVal = (Uvend).ToString( ); ssp.searchKey = "Id"; ssp.tableName = "Inven_SQL.dbo.vendor";
 									dbm.update_vendor(ssp, toDB[0]);

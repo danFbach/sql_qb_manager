@@ -79,9 +79,9 @@ namespace RAF_to_SQL
 				if(ds.Tables[0].Rows.Count == 1)
 				{
 					int fieldCount = ds.Tables[0].Rows[0].ItemArray.Count( );
-					for(int i = 0; i < fieldCount - 1; i++)
+					for(int i = 0; i < fieldCount; i++)
 					{
-						fullString += (ds.Tables[0].Rows[0].ItemArray[i + 1].ToString( ) + space).Remove(sendSpec[i]);
+						fullString += (ds.Tables[0].Rows[0].ItemArray[i].ToString( ) + space).Remove(sendSpec[i]);
 					}
 				}
 			}
@@ -140,10 +140,10 @@ namespace RAF_to_SQL
 		public void update_products(sqlParameters ssp, string updateData)
 		{
 			List<string> parametersRAW = new List<string>( );
-			for(int i = 0; i < spec.partTxSpec.Count - 1; i++)
+			for(int i = 0; i < spec.productTxSpec.Count - 1; i++)
 			{
-				//product = _switch.prodSwitch(i, updateData.Substring(position, spec.txPartSpec[i]), part);
-				position += spec.partTxSpec[i];
+				product = _switch.prodSwitch(i, updateData.Substring(position, spec.productTxSpec[i]), product);
+				position += spec.productTxSpec[i];
 			}
 			SqlCommandBuilder scb;
 			DataSet ds = new DataSet( );
@@ -155,7 +155,7 @@ namespace RAF_to_SQL
 			update.Connection = ssp.db_connector;
 			if(int.TryParse(ds.Tables[0].Rows[0].ItemArray[0].ToString( ), out int Id))
 			{
-				//update = _switch.productSwitchToSqlUpdate(update, part, Id, ds.Tables[0].Rows[0].ItemArray);
+				update = _switch.productSqlSwitchUpdate(update, product, Id, ds.Tables[0].Rows[0].ItemArray);
 			}
 			ssp.db_connector.Open( );
 			update.ExecuteNonQuery( );
@@ -305,7 +305,7 @@ namespace RAF_to_SQL
 				SqlCommand insertTemp = insert.Clone( );
 				insertTemp.CommandType = CommandType.Text;
 				insertTemp.Connection = sql_conn;
-				_switch.productSqlSwitch(insertTemp, product, updated);
+				_switch.productSqlSwitchInsert(insertTemp, product, updated);
 				updated += insertTemp.ExecuteNonQuery( );
 			}
 			Console.WriteLine(updated + " Products added to Database.");
