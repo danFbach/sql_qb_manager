@@ -11,9 +11,19 @@ namespace RAF_to_SQL
 		static void Main(string[] args)
 		{
 			mainSwitch ms = new mainSwitch( );
-			string[] _args = { "-q", "-v", "-5"};
+			fileSpec spec = new fileSpec( );
+			Write w = new Write( );
+			string[] _args = { "-a", "-q", "-v", "A" };
 			//string[] _args = { "" };
-			ms.main(_args);
+			try
+			{
+				ms.main(args);
+			}
+			catch(Exception e)
+			{
+				w.lineWrite(DateTime.Now.ToString() + Environment.NewLine + "Message: " + e.Message + Environment.NewLine + "Inner Ex: " + e.InnerException + Environment.NewLine + "Stack: " + e.StackTrace, spec.errorpath);
+			}
+			//ms.importManager( );
 		}
 	}
 }

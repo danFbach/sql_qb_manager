@@ -10,7 +10,8 @@
     <AssemblyName>w</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -59,7 +60,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -67,7 +67,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\mainSwitch.cs" />
+    <Compile Include="mainSwitch.cs" />
     <Compile Include="utility.cs" />
     <Compile Include="datasets.cs" />
     <Compile Include="dataSwitches.cs" />
@@ -104,6 +104,7 @@
     <Content Include="data\STRLDATA.TXT" />
     <Content Include="data\fromDB.txt" />
     <Content Include="data\toDB.txt" />
+    <Content Include="data\VENDORS.TXT" />
     <Content Include="SQL.ico" />
     <Content Include="sqlModels\dbo.Table.sql" />
     <Content Include="sqlModels\dbo.Table_1.sql" />

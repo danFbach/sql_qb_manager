@@ -51,7 +51,6 @@ namespace RAF_to_SQL
 			}
 			return collection;
 		}
-
 		public List<productField> productParser(List<string> raw)
 		{
 			List<productField> products = new List<productField>();
@@ -74,7 +73,7 @@ namespace RAF_to_SQL
 		public List<partFieldImport> part_parser(List<string> raw)
 		{
 			List<partFieldImport> parts = new List<partFieldImport>();
-			partFieldImport part = new partFieldImport( );
+			partFieldImport part;
 			foreach(string s in raw)
 			{
 				part = new partFieldImport( );
@@ -86,6 +85,27 @@ namespace RAF_to_SQL
 				parts.Add(part);
 			}
 			return parts;
+		}
+		public List<vendorFields> vendor_parser(List<string> raw)
+		{
+			List<vendorFields> vendors = new List<vendorFields>( );
+			vendorFields vendor;
+			foreach(string s in raw)
+			{
+				vendor = new vendorFields( );
+				string temp_s = s.Replace("\0", "");
+				string[] cracked = temp_s.Split('|');
+				for(int i = 0;i< (cracked.Count()); i++)
+				{
+
+					vendor = _switch.vendorSwitch(i, cracked[i], vendor);
+				}
+				if(!String.IsNullOrEmpty(vendor.v_code.Trim()))
+				{
+					vendors.Add(vendor);
+				}
+			}
+			return vendors;
 		}
 	}
 }

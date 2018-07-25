@@ -3,6 +3,7 @@ using System.Security;
 using System.Data.SqlClient;
 using System.Collections.Generic;
 using static RAF_to_SQL.datasets;
+using System;
 
 namespace RAF_to_SQL
 {
@@ -19,38 +20,48 @@ namespace RAF_to_SQL
 		#endregion global vars
 		public void main(string[] _args)
 		{
+			DateTime start = DateTime.Now;
+			TimeSpan elapsed = new TimeSpan( );
 			ssp.db_connector = new SqlConnection( );
-			ssp.db_connector.ConnectionString = db.inven_general_conn;
-			//SecureString secure = new SqlCredential("PublicSQLLogin", "LPI-1958");
-			//ssp.db_connector.Credential = new SqlCredential(secure.,secure);
 			string send = "";
-			switch(_args[0])
+			if(_args[0] == "-a")
+			{
+				ssp.db_connector.ConnectionString = db.inven_SQL_admin;
+			}
+			else if(_args[0] == "-u")
+			{
+				ssp.db_connector.ConnectionString = db.inven_SQL_user;
+			}
+			switch(_args[1])
 			{
 				case "-q":
-					switch(_args[1])
+					switch(_args[2])
 					{
 						case "-pr":
-							if(int.TryParse(_args[2], out int prodQ))
+							if(int.TryParse(_args[3], out int prodQ))
 							{
 								if(prodQ > 0 && prodQ < 1000)
 								{
 									prodQ += 90000;
-									ssp.tableName = "Inven_SQL.dbo.Products";
+									ssp.tableName = db.db_name + "Products";
 									ssp.searchVal = prodQ.ToString( );
 									ssp.searchKey = "Product_Number";
 									ssp.SQLcmd = "SELECT * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
 									send = dbm.selectQuery(ssp);
-									if(send != null) { w.lineWrite(send, spec.sendbackpathLocal); }
+									if(send != null)
+									{
+										w.lineWrite(send, spec.sendbackpathRemote);
+									}
 								}
 							}
 							break;
 						case "-pt":
-							if(int.TryParse(_args[2], out int partQ))
+							if(int.TryParse(_args[3], out int partQ))
 							{
 								if(partQ > 0 && partQ < 4500)
 								{
 									partQ += 1000;
-									ssp.tableName = "Inven_SQL.dbo.Parts";
+									ssp.tableName = db.db_name + "Parts";
 									ssp.searchVal = partQ.ToString( );
 									ssp.searchKey = "part_number";
 									ssp.SQLcmd = "SELECT * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
@@ -60,91 +71,96 @@ namespace RAF_to_SQL
 							}
 							break;
 						case "-v":
-							ssp.tableName = "vendor";
-							if(spec.abc.Contains(_args[2]))
+							ssp.tableName = (db.db_name + db.vendorTable);
+							if(spec.abc.Contains(_args[3]))
 							{
 								//for search by first letter of vcode
 								ssp.searchKey = "v_code";
-								ssp.searchVal = _args[2] + "%";
-								ssp.SQLcmd = "SELECT * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " LIKE '" + ssp.searchVal + "'";
+								ssp.searchVal = _args[3].ToUpper() + "%";
+								ssp.SQLcmd = "SELECT * FROM " + ssp.tableName + " WHERE UPPER(" + ssp.searchKey + ") LIKE '" + ssp.searchVal + "' ORDER BY " + ssp.searchKey + " ASC";
 								spec.response = dbm.query_vendor(ssp);
 							}
-							else if(int.TryParse(_args[2], out int idQuery))
+							else if(int.TryParse(_args[3], out int idQuery))
 							{
-								ssp.tableName = "Inven_SQL.dbo.vendor";
 								ssp.searchVal = idQuery.ToString( );
 								ssp.searchKey = "Id";
 								ssp.SQLcmd = "SELECT * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
 								send = dbm.selectQuery(ssp);
 							}
-							else if(_args[2].Length > 1)
+							else if(_args[3].Length > 1)
 							{
 								//searching by vendor code
 								ssp.searchKey = "v_code";
-								ssp.searchVal = _args[2].Replace("-","");
-								ssp.SQLcmd = "SELECT * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = '" + ssp.searchVal + "'";
+								ssp.searchVal = _args[3].ToUpper();
+								ssp.SQLcmd = "SELECT * FROM " + ssp.tableName + " WHERE UPPER(" + ssp.searchKey + ") LIKE '%" + ssp.searchVal + "%'";
 								spec.response = dbm.query_vendor(ssp);
 							}
-							if(spec.response.Count == 1 || send.Length > 0)
+							if(spec.response.Count == 1)
 							{
-								string sendData = send ?? spec.response[0];
-								w.lineWrite(sendData, spec.sendbackpathRemote);
+								w.lineWrite(spec.response[0], spec.sendbackpathRemote);
+							}
+							else if(!String.IsNullOrEmpty(send))
+							{
+								w.lineWrite(send, spec.sendbackpathRemote);
 							}
 							else if(spec.response.Count > 1) { w.listWrite(spec.response, spec.sendbackpathRemote); }
 							break;
 					}
+					DateTime end = DateTime.Now;
+					elapsed = end.Subtract(start);
+					w.lineWrite(elapsed.ToString( ), @"C:\INVEN\_TIMEELAPSED.TXT");
 					break;
 				case "-i":
-					//toDB = r.readFromFile(@"\\SOURCE\INVEN\TEMPDATA\toDB.txt");
-					toDB = r.readFromFile(@"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\toDB.txt");
+					toDB = r.readFromFile(spec.retrieveDataRemote);
+					//toDB = r.readFromFile(spec.retrieveDataLocal);
 					if(toDB.Count > 0)
 					{
-						switch(_args[1])
+						switch(_args[2])
 						{
 							case "-pr":
-								ssp.searchKey = "Product_Number"; ssp.tableName = "Inven_SQL.dbo.Products"; ssp.SQLcmd = "SELECT TOP(1) * FROM " + ssp.tableName;
+								ssp.searchKey = "Product_Number"; ssp.tableName = db.db_name + "Products"; ssp.SQLcmd = "SELECT TOP(1) * FROM " + ssp.tableName;
 								dbm.insert_product(ssp, toDB[0]);
 								break;
 							case "-pt":
-								ssp.searchKey = "part_number"; ssp.tableName = "Inven_SQL.dbo.Parts"; ssp.SQLcmd = "SELECT TOP(1) * FROM " + ssp.tableName;
+								ssp.searchKey = "part_number"; ssp.tableName = db.db_name + "Parts"; ssp.SQLcmd = "SELECT TOP(1) * FROM " + ssp.tableName;
 								dbm.insert_part(ssp, toDB[0]);
 								break;
 							case "-v":
-								ssp.searchKey = "1"; ssp.tableName = "Inven_SQL.dbo.vendor"; ssp.SQLcmd = "SELECT TOP(1) * FROM " + ssp.tableName;
+								ssp.searchKey = "1"; ssp.tableName = db.db_name + "vendor"; ssp.SQLcmd = "SELECT TOP(1) * FROM " + ssp.tableName;
 								dbm.insert_vendor(ssp, toDB[0]);
 								break;
 						}
 					}
 					break;
 				case "-u":
-					//toDB = r.readFromFile(@"\\SOURCE\INVEN\TEMPDATA\toDB.txt");
-					toDB = r.readFromFile(@"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\toDB.txt");
+					toDB = r.readFromFile(spec.retrieveDataRemote);
+					//toDB = r.readFromFile(spec.retrieveDataLocal);
 					if(toDB.Count > 0)
 					{
-						switch(_args[1])
+						switch(_args[2])
 						{
 							case "-pr":
-								if(int.TryParse(_args[2], out int Uprod))
+								if(int.TryParse(_args[3], out int Uprod))
 								{
 									ssp.searchVal = (Uprod += 90000).ToString( );
 									ssp.searchKey = "Product_Number";
-									ssp.tableName = "Inven_SQL.dbo.Products";
+									ssp.tableName = db.db_name + "Products";
 									dbm.update_products(ssp, toDB[0]);
 								}
 								break;
 							case "-pt":
-								if(int.TryParse(_args[2], out int Upart))
+								if(int.TryParse(_args[3], out int Upart))
 								{
 									ssp.searchVal = (Upart += 1000).ToString( );
 									ssp.searchKey = "part_number";
-									ssp.tableName = "Inven_SQL.dbo.Parts";
+									ssp.tableName = db.db_name + "Parts";
 									dbm.update_part(ssp, toDB[0]);
 								}
 								break;
 							case "-v":
-								if(int.TryParse(_args[2].Replace("-",""), out int Uvend))
+								if(int.TryParse(_args[3].Replace("-", ""), out int Uvend))
 								{
-									ssp.searchVal = (Uvend).ToString( ); ssp.searchKey = "Id"; ssp.tableName = "Inven_SQL.dbo.vendor";
+									ssp.searchVal = (Uvend).ToString( ); ssp.searchKey = "Id"; ssp.tableName = db.db_name + "vendor";
 									dbm.update_vendor(ssp, toDB[0]);
 								}
 								break;
@@ -152,33 +168,33 @@ namespace RAF_to_SQL
 					}
 					break;
 				case "-d":
-					switch(_args[1])
+					switch(_args[2])
 					{
 						case "-pr":
-							if(int.TryParse(_args[2], out int Dprod))
+							if(int.TryParse(_args[3], out int Dprod))
 							{
 								ssp.searchVal = (Dprod += 90000).ToString( );
-								ssp.tableName = "Inven_SQL.dbo.Products";
+								ssp.tableName = db.db_name + "Products";
 								ssp.searchKey = "product_number";
 								ssp.SQLcmd = "DELETE FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
 								dbm.delete_row(ssp);
 							}
 							break;
 						case "-pt":
-							if(int.TryParse(_args[2], out int Dpart))
+							if(int.TryParse(_args[3], out int Dpart))
 							{
 								ssp.searchVal = (Dpart += 1000).ToString( );
-								ssp.tableName = "Inven_SQL.dbo.Parts";
+								ssp.tableName = db.db_name + "Parts";
 								ssp.searchKey = "part_number";
 								ssp.SQLcmd = "DELETE FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
 								dbm.delete_row(ssp);
 							}
 							break;
 						case "-v":
-							if(int.TryParse(_args[2], out int Dvend))
+							if(int.TryParse(_args[3], out int Dvend))
 							{
 								ssp.searchVal = (Dvend).ToString( );
-								ssp.tableName = "Inven_SQL.dbo.vendor";
+								ssp.tableName = db.db_name + "vendor";
 								ssp.searchKey = "Id";
 								ssp.SQLcmd = "DELETE FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
 								dbm.delete_row(ssp);
@@ -192,16 +208,23 @@ namespace RAF_to_SQL
 		public void importManager()
 		{
 			Parse parse = new Parse( );
-			//List<string> raw = r.readFromFile(@"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\PRODDATA.txt");
+			List<string> raw = new List<string>( );
+
+			//raw = r.readFromFile(@"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\PRODDATA.txt");
 			//List<productField> products = parse.productParser(raw);
 			//dbm.importProducts(products);
 			//dbm.importProductParts(products);
 
-			//List<string> raw = r.readFromFile(@"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\PARTDATA.txt");
+			//raw = r.readFromFile(@"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\PARTDATA.txt");
 			//List<partFieldImport> parts = parse.part_parser(raw);
 			//dbm.importParts(parts);
 
-			//List<string> raw = r.readFromFile(@"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\STRLDATA.TXT");
+			//to be vendor import
+			//raw = r.readFromFile(@"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\VENDORS.txt");
+			//List<vendorFields> vendors = parse.vendor_parser(raw);
+			//dbm.importVendors(vendors);
+
+			//raw = r.readFromFile(@"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\STRLDATA.TXT");
 			//parse.stringAlongParser(raw);
 
 			//multitool rawData = r.rafRead("pt");

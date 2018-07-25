@@ -201,6 +201,79 @@ namespace RAF_to_SQL
 			}
 			return command;
 		}
+		public SqlCommand vendorSwitchToSQLInsert(SqlCommand command, vendorFields v, int id)
+		{
+			foreach(SqlParameter param in command.Parameters)
+			{
+				switch(param.SourceColumn)
+				{
+					case "id":
+						param.Value = id;
+						continue;
+					case "v_code":
+						param.Value = v.v_code;
+						continue;
+					case "business_name":
+						param.Value = v.business_name;
+						continue;
+					case "address_1":
+						param.Value = v.address_1;
+						continue;
+					case "address_2":
+						param.Value = v.address_2;
+						continue;
+					case "city_state_zip":
+						param.Value = v.city_state_zip;
+						continue;
+					case "fax_number":
+						param.Value = v.fax_number;
+						continue;
+					case "terms":
+						param.Value = v.terms;
+						continue;
+					case "order_contact":
+						param.Value = v.order_contact;
+						continue;
+					case "order_email":
+						param.Value = v.order_email;
+						continue;
+					case "order_email_cc":
+						param.Value = v.order_email_cc;
+						continue;
+					case "order_phone":
+						param.Value = v.order_phone;
+						continue;
+					case "account_contact":
+						param.Value = v.account_contact;
+						continue;
+					case "account_email":
+						param.Value = v.account_email;
+						continue;
+					case "account_phone":
+						param.Value = v.account_phone;
+						continue;
+					case "quality_contact":
+						param.Value = v.quality_contact;
+						continue;
+					case "quality_email":
+						param.Value = v.quality_email;
+						continue;
+					case "quality_phone":
+						param.Value = v.quality_phone;
+						continue;
+					case "shipping_contact":
+						param.Value = v.shipping_contact;
+						continue;
+					case "shipping_email":
+						param.Value = v.shipping_email;
+						continue;
+					case "shipping_phone":
+						param.Value = v.shipping_phone;
+						continue;
+				}
+			}
+			return command;
+		}
 		public SqlCommand vendorSwitchToSQLUpdate(SqlCommand command, vendorFields v, object[] originalData)
 		{
 			foreach(SqlParameter param in command.Parameters)

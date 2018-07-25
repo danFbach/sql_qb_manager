@@ -236,15 +236,20 @@ namespace RAF_to_SQL
 			public List<int> product = new List<int> { 6, 24, 6, 12, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 };
 			public string prodata = @"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\inven.dat";
 
-			public string sendbackpathLocal = @"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\fromDB.txt";
+			public string errorpath = @"C:\INVEN\csharperror.txt";
 			public string sendbackpathRemote = @"\\SOURCE\INVEN\TEMPDATA\fromDB.txt";
+			public string sendbackpathLocal = @"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\fromDB.txt";
+			public string retrieveDataLocal = @"\\SOURCE\INVEN\TEMPDATA\toDB.txt";
+			public string retrieveDataRemote = @"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\toDB.txt";
 			public List<string> response = new List<string>( );
-			public string abc = "abcdefghijklmnopqrstuvwxyz";
+			public string abc = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		}
 		public class dbConfig
 		{
-			public string inven_general_conn = @"Data Source=DANDELL\MSSQLSERVER01;Initial Catalog=Inven_SQL;User ID=PublicSQLLogin;Password=LPI-1958;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-			public string vendorTable = "vendor";
+			public string inven_SQL_admin = @"Data Source=SERVER2008R2;Integrated Security=False;User ID=Remote_Admin;Password=Pqow0192@&;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False";
+			public string inven_SQL_user = @"Data Source=SERVER2008R2;Integrated Security=False;User ID=Remote_User;Password=standard0192;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False";
+			public string db_name = "master_inven.dbo.";
+			public string vendorTable = "vendors";
 			public int vendorColCount = 21;
 			public string partVendorRelatTable = "part_vendor_relational";
 			public int partVendorColCount = 3;

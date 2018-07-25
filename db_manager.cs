@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Data.SqlClient;
 using System.Data;
-using System.Data.Sql;
 using static RAF_to_SQL.datasets;
-using System.Data.Common;
 
 namespace RAF_to_SQL
 {
@@ -15,6 +12,7 @@ namespace RAF_to_SQL
 	{
 		#region global vars
 		DataSet ds = new DataSet( );
+		dbConfig db = new dbConfig( );
 		fileSpec spec = new fileSpec( );
 		partField part = new partField( );
 		dbConfig dbconfig = new dbConfig( );
@@ -30,7 +28,7 @@ namespace RAF_to_SQL
 		#region db_utils
 		public void openDBcnxtn()
 		{
-			sql_conn.ConnectionString = dbconfig.inven_general_conn;
+			sql_conn.ConnectionString = dbconfig.inven_SQL_admin;
 			sql_conn.Open( );
 		}
 		public SqlCommandBuilder createCommandBuilder(string table)
@@ -40,7 +38,6 @@ namespace RAF_to_SQL
 			SqlDataAdapter sda;
 			sda = new SqlDataAdapter("SELECT TOP(1) * FROM " + table, sql_conn);
 			sda.Fill(dataset, table);
-
 			scb = new SqlCommandBuilder(sda);
 			return scb;
 		}
@@ -58,30 +55,59 @@ namespace RAF_to_SQL
 		#region universal tools
 		public string selectQuery(sqlParameters ssp)
 		{
+			string partTable = db.db_name + db.partTable;
+			string vendorTable = db.db_name + db.vendorTable;
+			string productTable = db.db_name + db.productTable;
 			SqlDataAdapter sda1 = new SqlDataAdapter(ssp.SQLcmd, ssp.db_connector);
 			List<int> sendSpec = new List<int>( );
-			switch(ssp.tableName)
+			if(ssp.tableName == productTable)
 			{
-				case "Inven_SQL.dbo.Products":
-					sendSpec = spec.productTxSpec;
-					break;
-				case "Inven_SQL.dbo.Parts":
-					sendSpec = spec.partTxSpec;
-					break;
-				case "Inven_SQL.dbo.vendor":
-					sendSpec = spec.vendorTxSpec;
-					break;
-			}
-			ssp.db_connector.Open( );
-			sda1.Fill(ds, ssp.tableName);
-			if(ds.Tables.Count == 1)
-			{
-				if(ds.Tables[0].Rows.Count == 1)
+				sendSpec = spec.productTxSpec;
+				ssp.db_connector.Open( );
+				sda1.Fill(ds, ssp.tableName);
+				if(ds.Tables.Count == 1)
 				{
-					int fieldCount = ds.Tables[0].Rows[0].ItemArray.Count( );
-					for(int i = 0; i < fieldCount; i++)
+					if(ds.Tables[0].Rows.Count == 1)
 					{
-						fullString += (ds.Tables[0].Rows[0].ItemArray[i].ToString( ) + space).Remove(sendSpec[i]);
+						int fieldCount = sendSpec.Count( );
+						for(int i = 0; i < fieldCount; i++)
+						{
+							fullString += (ds.Tables[0].Rows[0].ItemArray[i+1].ToString( ) + space).Remove(sendSpec[i]);
+						}
+					}
+				}
+			}
+			else if(ssp.tableName == partTable)
+			{
+				sendSpec = spec.partTxSpec;
+				ssp.db_connector.Open( );
+				sda1.Fill(ds, ssp.tableName);
+				if(ds.Tables.Count == 1)
+				{
+					if(ds.Tables[0].Rows.Count == 1)
+					{
+						int fieldCount = sendSpec.Count();
+						for(int i = 0; i < fieldCount; i++)
+						{
+							fullString += (ds.Tables[0].Rows[0].ItemArray[i+2].ToString( ) + space).Remove(sendSpec[i]);
+						}
+					}
+				}
+			}
+			else if(ssp.tableName == vendorTable)
+			{
+				sendSpec = spec.vendorTxSpec;
+				ssp.db_connector.Open( );
+				sda1.Fill(ds, ssp.tableName);
+				if(ds.Tables.Count == 1)
+				{
+					if(ds.Tables[0].Rows.Count == 1)
+					{
+						int fieldCount = ds.Tables[0].Rows[0].ItemArray.Count( );
+						for(int i = 0; i < fieldCount; i++)
+						{
+							fullString += (ds.Tables[0].Rows[0].ItemArray[i].ToString( ) + space).Remove(sendSpec[i]);
+						}
 					}
 				}
 			}
@@ -295,11 +321,10 @@ namespace RAF_to_SQL
 		#region import data
 		public void importProducts(List<productField> products)
 		{
-			SqlCommandBuilder scb = createCommandBuilder(dbconfig.productTable);
-			SqlCommand insert = scb.GetInsertCommand(true);
-			List<SqlCommand> insertCommands = new List<SqlCommand>( );
-			int updated = 0;
 			openDBcnxtn( );
+			SqlCommandBuilder scb = createCommandBuilder(db.db_name + db.productTable);
+			SqlCommand insert = scb.GetInsertCommand(true);
+			int updated = 0;
 			foreach(productField product in products)
 			{
 				SqlCommand insertTemp = insert.Clone( );
@@ -308,16 +333,13 @@ namespace RAF_to_SQL
 				_switch.productSqlSwitchInsert(insertTemp, product, updated);
 				updated += insertTemp.ExecuteNonQuery( );
 			}
-			Console.WriteLine(updated + " Products added to Database.");
-			Console.ReadKey( );
 		}
 		public void importProductParts(List<productField> products)
 		{
-			SqlCommandBuilder scb = createCommandBuilder(dbconfig.prodReqdPartTable);
-			SqlCommand insert = scb.GetInsertCommand(true);
-			List<SqlCommand> insertCommands = new List<SqlCommand>( );
-			int updated = 0;
 			openDBcnxtn( );
+			SqlCommandBuilder scb = createCommandBuilder(db.db_name + db.prodReqdPartTable);
+			SqlCommand insert = scb.GetInsertCommand(true);
+			int updated = 0;
 			foreach(productField product in products)
 			{
 				foreach(KeyValuePair<string, int> part in product.parts_reqd)
@@ -346,16 +368,13 @@ namespace RAF_to_SQL
 					updated += insertTemp.ExecuteNonQuery( );
 				}
 			}
-			Console.WriteLine(updated + " Products added to Database.");
-			Console.ReadKey( );
 		}
 		public void importParts(List<partFieldImport> parts)
 		{
-			SqlCommandBuilder scb = createCommandBuilder(dbconfig.partTable);
-			SqlCommand insert = scb.GetInsertCommand(true);
-			List<SqlCommand> insertCommands = new List<SqlCommand>( );
-			int updated = 0;
 			openDBcnxtn( );
+			SqlCommandBuilder scb = createCommandBuilder(db.db_name + db.partTable);
+			SqlCommand insert = scb.GetInsertCommand(true);
+			int updated = 0;
 			foreach(partFieldImport part in parts)
 			{
 				SqlCommand insertTemp = insert.Clone( );
@@ -364,8 +383,22 @@ namespace RAF_to_SQL
 				_switch.partSqlImportSwitch(insertTemp, part, updated);
 				updated += insertTemp.ExecuteNonQuery( );
 			}
-			Console.WriteLine(updated + " Parts added to Database.");
-			Console.ReadKey( );
+		}
+		public void importVendors(List<vendorFields> vendors)
+		{
+			openDBcnxtn( );
+			SqlCommandBuilder scb = createCommandBuilder(db.db_name + db.vendorTable);
+			SqlCommand insert = scb.GetInsertCommand(true);
+			int updated = 0;
+			foreach(vendorFields vendor in vendors)
+			{
+				SqlCommand insertTemp = insert.Clone( );
+				insertTemp.CommandType = CommandType.Text;
+				insertTemp.Connection = sql_conn;
+				_switch.vendorSwitchToSQLInsert(insertTemp, vendor, updated);
+				updated += insertTemp.ExecuteNonQuery( );
+			}
+
 		}
 		public void load_Into_SQL(List<vendorFields> vendors, sqlParameters ssp)
 		{

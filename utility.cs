@@ -56,7 +56,7 @@ namespace RAF_to_SQL
 		{
 			dbConfig db = new dbConfig( );
 			sqlParameters ssp = new sqlParameters( );
-			ssp.db_connector = new SqlConnection(db.inven_general_conn);
+			ssp.db_connector = new SqlConnection(db.inven_SQL_admin);
 			ssp.tableName = tableName;
 			ssp.SQLcmd = SQLcmd;
 			ssp.searchKey = searchKey;
