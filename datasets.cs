@@ -237,10 +237,12 @@ namespace RAF_to_SQL
 			public string prodata = @"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\inven.dat";
 
 			public string errorpath = @"C:\INVEN\csharperror.txt";
-			public string sendbackpathRemote = @"\\SOURCE\INVEN\TEMPDATA\fromDB.txt";
+			public string sendbackpathDebug = @"C:\INVEN\TEMPDATA\fromDB.txt";
 			public string sendbackpathLocal = @"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\fromDB.txt";
-			public string retrieveDataLocal = @"\\SOURCE\INVEN\TEMPDATA\toDB.txt";
-			public string retrieveDataRemote = @"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\toDB.txt";
+			public string sendbackpathRemote = @"\\SOURCE\INVEN\TEMPDATA\fromDB.txt";
+			public string retrieveDataDebug = @"C:\Users\Dan\Documents\Visual Studio 2017\Projects\RAFtest\RAF_to_SQL\data\toDB.txt";
+			public string retrieveDataLocal = @"C:\INVEN\TEMPDATA\toDB.txt";
+			public string retrieveDataRemote = @"\\SOURCE\INVEN\TEMPDATA\toDB.txt";
 			public List<string> response = new List<string>( );
 			public string abc = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		}

@@ -24,14 +24,8 @@ namespace RAF_to_SQL
 			TimeSpan elapsed = new TimeSpan( );
 			ssp.db_connector = new SqlConnection( );
 			string send = "";
-			if(_args[0] == "-a")
-			{
-				ssp.db_connector.ConnectionString = db.inven_SQL_admin;
-			}
-			else if(_args[0] == "-u")
-			{
-				ssp.db_connector.ConnectionString = db.inven_SQL_user;
-			}
+			if(_args[0] == "-a") { ssp.db_connector.ConnectionString = db.inven_SQL_admin; }
+			else if(_args[0] == "-u") { ssp.db_connector.ConnectionString = db.inven_SQL_user; }
 			switch(_args[1])
 			{
 				case "-q":
@@ -50,7 +44,7 @@ namespace RAF_to_SQL
 									send = dbm.selectQuery(ssp);
 									if(send != null)
 									{
-										w.lineWrite(send, spec.sendbackpathRemote);
+										w.lineWrite(send, spec.sendbackpathDebug);
 									}
 								}
 							}
@@ -66,7 +60,7 @@ namespace RAF_to_SQL
 									ssp.searchKey = "part_number";
 									ssp.SQLcmd = "SELECT * FROM " + ssp.tableName + " WHERE " + ssp.searchKey + " = " + ssp.searchVal;
 									send = dbm.selectQuery(ssp);
-									if(send != null) { w.lineWrite(send, spec.sendbackpathRemote); }
+									if(send != null) { w.lineWrite(send, spec.sendbackpathDebug); }
 								}
 							}
 							break;
@@ -95,23 +89,14 @@ namespace RAF_to_SQL
 								ssp.SQLcmd = "SELECT * FROM " + ssp.tableName + " WHERE UPPER(" + ssp.searchKey + ") LIKE '%" + ssp.searchVal + "%'";
 								spec.response = dbm.query_vendor(ssp);
 							}
-							if(spec.response.Count == 1)
-							{
-								w.lineWrite(spec.response[0], spec.sendbackpathRemote);
-							}
-							else if(!String.IsNullOrEmpty(send))
-							{
-								w.lineWrite(send, spec.sendbackpathRemote);
-							}
-							else if(spec.response.Count > 1) { w.listWrite(spec.response, spec.sendbackpathRemote); }
+							if(spec.response.Count == 1) { w.lineWrite(spec.response[0], spec.sendbackpathDebug); }
+							else if(!String.IsNullOrEmpty(send)) { w.lineWrite(send, spec.sendbackpathDebug); }
+							else if(spec.response.Count > 1) { w.listWrite(spec.response, spec.sendbackpathDebug); }
 							break;
 					}
-					DateTime end = DateTime.Now;
-					elapsed = end.Subtract(start);
-					w.lineWrite(elapsed.ToString( ), @"C:\INVEN\_TIMEELAPSED.TXT");
 					break;
 				case "-i":
-					toDB = r.readFromFile(spec.retrieveDataRemote);
+					toDB = r.readFromFile(spec.retrieveDataDebug);
 					//toDB = r.readFromFile(spec.retrieveDataLocal);
 					if(toDB.Count > 0)
 					{
@@ -203,6 +188,9 @@ namespace RAF_to_SQL
 					}
 					break;
 			}
+					DateTime end = DateTime.Now;
+					elapsed = end.Subtract(start);
+					w.lineWrite(elapsed.ToString( ), @"C:\INVEN\_TIMEELAPSED.TXT");
 
 		}
 		public void importManager()

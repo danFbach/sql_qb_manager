@@ -465,6 +465,55 @@ namespace RAF_to_SQL
 			}
 			return command;
 		}
+		public SqlCommand productSqlSwitchInsert(SqlCommand command, productField product)
+		{
+			foreach(SqlParameter param in command.Parameters)
+			{
+				switch(param.SourceColumn)
+				{
+					case "Product_Number":
+						param.Value = product.Product_Number.Trim( );
+						continue;
+					case "Description":
+						param.Value = product.Description;
+						continue;
+					case "Price":
+						param.Value = product.Price;
+						continue;
+					case "Weight":
+						param.Value = product.Weight;
+						continue;
+					case "Master_Units":
+						param.Value = product.Master_Units;
+						continue;
+					case "Cubic_Feet":
+						param.Value = product.Cubic_Feet;
+						continue;
+					case "quantity_on_hand":
+						param.Value = product.quantity_on_hand;
+						continue;
+					case "annual_use":
+						param.Value = product.annual_use;
+						continue;
+					case "sales_last_period":
+						param.Value = product.sales_last_period;
+						continue;
+					case "ytd_sales":
+						param.Value = product.ytd_sales;
+						continue;
+					case "gross":
+						param.Value = product.gross;
+						continue;
+					case "assembly_time_secs":
+						param.Value = product.assembly_time_secs;
+						continue;
+					case "product_code":
+						param.Value = product.product_code;
+						continue;
+				}
+			}
+			return command;
+		}
 		public SqlCommand productSqlSwitchUpdate(SqlCommand command, productField product, int id, object[] original_parameters)
 		{
 			foreach(SqlParameter param in command.Parameters)

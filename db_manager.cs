@@ -145,7 +145,7 @@ namespace RAF_to_SQL
 		{
 			for(int i = 0; i < spec.partTxSpec.Count - 1; i++)
 			{
-				//product = _switch.productSwitchFromQB(i, insertData.Substring(position, spec.txPartSpec[i]), part);
+				product = _switch.prodSwitch(i, insertData.Substring(position, spec.productTxSpec[i]), product);
 				position += spec.partTxSpec[i];
 			}
 			DataSet ds = new DataSet( );
@@ -157,7 +157,7 @@ namespace RAF_to_SQL
 			insert.Connection = ssp.db_connector;
 			if(part.part_name.Trim( ) != null)
 			{
-				//insert = _switch.productSwitchToSQLInsert(insert, part);
+				insert = _switch.productSqlSwitchInsert(insert, product);
 				ssp.db_connector.Open( );
 				insert.ExecuteNonQuery( );
 				ssp.db_connector.Close( );
